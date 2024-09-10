@@ -1,0 +1,23 @@
+{
+  "name": "naves--back",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoanastamenova/Naves--back.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yoanastamenova/Naves--back/issues"
+  },
+  "homepage": "https://github.com/yoanastamenova/Naves--back#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^4.20.0",
+    "typescript": "^5.6.2"
+  }
+}
