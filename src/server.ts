@@ -8,7 +8,7 @@ app.use(cors())
 app.use(express.json())
 
 //CONFIG
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 
 AppDataSource.initialize()
     .then(() => {
@@ -20,3 +20,16 @@ AppDataSource.initialize()
     .catch(error => {
         console.log(error)
     })
+
+//Home
+
+app.get('/healthy', (req, res) => {
+    // res.send('Server is healthy');
+  
+    res.status(200).json(
+      {
+        success: true,
+        message: 'Server is Healthy'
+      }
+    )
+  })

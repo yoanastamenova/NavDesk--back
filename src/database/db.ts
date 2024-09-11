@@ -13,4 +13,5 @@ entities: [`${__dirname}/models/**/*{.ts,.js}`],
 migrations: [`${__dirname}/migrations/**/*{.ts,.js}`],
 synchronize: false,
 logging: false,
+driver: require("mysql2")
 })
