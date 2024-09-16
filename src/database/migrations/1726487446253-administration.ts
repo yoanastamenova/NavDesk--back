@@ -20,7 +20,7 @@ export class Administration1726487446253 implements MigrationInterface {
                         isNullable: false
                     },
                     {
-                        name: "total_entries",
+                        name: "total_accesses",
                         type: "int"
                     },
                     {
@@ -38,7 +38,7 @@ export class Administration1726487446253 implements MigrationInterface {
                 ]
             }),
             true
-        )
+        );
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
