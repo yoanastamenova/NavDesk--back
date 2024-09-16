@@ -28,7 +28,7 @@ export class Room1726487414509 implements MigrationInterface {
                     {
                         name: "room_type",
                         type: "varchar",
-                        length: "100"
+                        length: "50"
                     }
                 ]
             }),
