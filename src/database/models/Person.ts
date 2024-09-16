@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Access } from "./Access"
 
 @Entity()
 export class Person {
@@ -22,4 +23,7 @@ export class Person {
 
     @Column({ name: 'phone'})
     phone!: string
+
+    @OneToMany(() => Access, access => access.person)
+    accesses!: Access[];
 }
