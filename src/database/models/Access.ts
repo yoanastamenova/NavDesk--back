@@ -19,8 +19,13 @@ export class Access {
     @Column({ name: 'exit_datetime'})
     exit_datetime!: Date
 
-    @Column({ name: 'status'})
-    status!: string
+    @Column({
+        type: "enum",
+        enum: ["approved", "denied", "pending"],
+        default: "pending",
+        name: 'state'
+    })
+    state!: 'approved' | 'denied' | 'pending';
 
     @ManyToOne(() => Person)
     @JoinColumn({ name: 'person_id' })

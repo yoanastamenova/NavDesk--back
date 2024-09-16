@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Access } from "./Access";
+import { Access_history } from "./Access_history";
 
 @Entity()
 export class Room {
@@ -17,4 +18,7 @@ export class Room {
 
     @OneToMany(() => Access, access => access.room)
     accesses!: Access[];
+
+    @OneToMany(() => Access_history, accessHistory => accessHistory.room)
+    accessHistories!: Access_history[];
 }
