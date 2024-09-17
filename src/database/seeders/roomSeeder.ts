@@ -7,7 +7,7 @@ export const roomSeeder = async () => {
         
         const room1 = new Room();
         room1.room_name = 'Valencia';
-        room1.capacity = 20;
+        room1.capacity = 30;
         room1.room_type = 'Meetin room 1';
         await room1.save();
 
@@ -20,19 +20,19 @@ export const roomSeeder = async () => {
 
         const room3 = new Room();
         room3.room_name = 'Barcelona';
-        room3.capacity = 15;
+        room3.capacity = 20;
         room3.room_type = 'Office room';
         await room3.save();
 
         const room4 = new Room();
         room4.room_name = 'Malaga';
-        room4.capacity = 25;
+        room4.capacity = 50;
         room4.room_type = 'Training room';
         await room4.save();
 
         const room5 = new Room();
         room5.room_name = 'Sevilla';
-        room5.capacity = 50;
+        room5.capacity = 100;
         room5.room_type = 'Event room';
         await room5.save();
 
