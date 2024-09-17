@@ -6,7 +6,7 @@ Welcome to the backend part of NavDesk. This is a Co-Working App project utilizi
 <br>
 <br>
 
-  <summary> Table of contents 📝</summary>
+##  <summary> Table of contents 📝</summary>
   <ol>
     <li><a href="#about-the-project-📁">About the project</a></li>
     <li><a href="#deploy-🚀">Deploy</a></li>
