@@ -47,7 +47,6 @@ Used technologies for the project:
 <a href="https://nodejs.org/es/">
     <img src= "https://img.shields.io/badge/node.js-026E00?style=for-the-badge&logo=node.js&logoColor=white"/>
 </a>
-
 </a>
 <a href="">
     <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
@@ -67,7 +66,7 @@ Used technologies for the project:
 
 <img src="./img/Reverse_schema.png">
 
-- The database schema includes entities like `Room`, `Person`, `Access`, `AccessHistory`, and `Administration`. These tables are interconnected to provide a comprehensive system for managing access controls dynamically. The relationships between them provide a faster and more capable way of updating the data in real time environment. It is designed in SQL together with TypeORM.
+- The database schema includes entities like `User`, `Room`, `Access`, `AccessHistory`, and `Administration`. These tables are interconnected to provide a comprehensive system for managing access controls dynamically. The relationships between them provide a faster and more capable way of updating the data in real time environment. It is designed in SQL together with TypeORM.
 
 ## Local installation option ⚙️
 - Before starting it is important to have SQL and MySQLWorkbench installed locally in order to work with the database. If you dont have it or simply prefer to use a Docker configuration please follow the steps bellow and then you can continue with the clone.
