@@ -15,7 +15,7 @@ export class Access1726487424393 implements MigrationInterface {
                         generationStrategy: "increment"
                     },
                     {
-                        name: "person_id",
+                        name: "user_id",
                         type: "int",
                         isNullable: false
                     },
@@ -40,8 +40,8 @@ export class Access1726487424393 implements MigrationInterface {
                 ],
                 foreignKeys: [
                     {
-                        columnNames: ["person_id"],
-                        referencedTableName: "person",
+                        columnNames: ["user_id"],
+                        referencedTableName: "user",
                         referencedColumnNames: ["id"],
                         onDelete: "CASCADE"
                     },

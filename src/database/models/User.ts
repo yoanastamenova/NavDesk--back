@@ -2,8 +2,8 @@ import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "t
 import { Access } from "./Access"
 import { Access_history } from "./Access_history"
 
-@Entity("person")
-export class Person extends BaseEntity{
+@Entity("user")
+export class User extends BaseEntity{
     @PrimaryGeneratedColumn()
     id!: number
 
@@ -25,9 +25,9 @@ export class Person extends BaseEntity{
     @Column({ name: 'phone'})
     phone!: string
 
-    @OneToMany(() => Access, access => access.person)
+    @OneToMany(() => Access, access => access.user)
     accesses!: Access[];
 
-    @OneToMany(() => Access_history, accessHistory => accessHistory.person)
+    @OneToMany(() => Access_history, accessHistory => accessHistory.user)
 accessHistories!: Access_history[];
 }

@@ -1,15 +1,15 @@
 import { accessHistorySeeder } from "./accessHistorySeeder";
 import { accessSeeder } from "./accessSeeder";
 import { administrationSeeder } from "./administrationSeeder";
-import { personSeeder } from "./personSeeder";
+import { userSeeder } from "./userSeeder";
 import { roomSeeder } from "./roomSeeder";
 
 (async () => {
     try {
         console.log("********* Starting seeders... *********");
-        console.log("Running personSeeder...");
-        await personSeeder();
-        console.log("personSeeder completed.");
+        console.log("Running userSeeder...");
+        await userSeeder();
+        console.log("userSeeder completed.");
 
         console.log("Running roomSeeder...");
         await roomSeeder();

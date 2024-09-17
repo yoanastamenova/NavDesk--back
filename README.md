@@ -4,7 +4,6 @@ Welcome to the backend part of NavDesk. This is a Co-Working App project utilizi
 
 <img src="./img/logo.webp" width="600" height="600" align="center">
 <br>
-<br>
 
 ##  <summary> Table of contents 📝</summary>
   <ol>

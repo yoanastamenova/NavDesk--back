@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
-import { Person } from "./Person"
+import { User } from "./User"
 import { Room } from "./Room"
 
 @Entity("access")
@@ -7,8 +7,8 @@ export class Access extends BaseEntity{
     @PrimaryGeneratedColumn()
     id!: number
 
-    @Column({ name: 'person_id'})
-    person_id!: number
+    @Column({ name: 'user_id'})
+    user_id!: number
 
     @Column({ name: 'room_id'})
     room_id!: number
@@ -27,9 +27,9 @@ export class Access extends BaseEntity{
     })
     state!: 'approved' | 'denied' | 'pending';
 
-    @ManyToOne(() => Person)
-    @JoinColumn({ name: 'person_id' })
-    person!: Person;
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'user_id' })
+    user!: User;
 
     @ManyToOne(() => Room)
     @JoinColumn({ name: 'room_id' })

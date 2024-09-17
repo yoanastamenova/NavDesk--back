@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
-import { Person } from "./Person"
+import { User } from "./User"
 import { Room } from "./Room"
 
 @Entity("access_history")
@@ -7,8 +7,8 @@ export class Access_history extends BaseEntity{
     @PrimaryGeneratedColumn()
     id!: number
 
-    @Column({ name: 'person_id'})
-    person_id!: number
+    @Column({ name: 'user_id'})
+    user_id!: number
 
     @Column({ name: 'room_id'})
     room_id!: number
@@ -19,9 +19,9 @@ export class Access_history extends BaseEntity{
     @Column({ name: 'exit_datetime'})
     exit_datetime!: Date
 
-    @ManyToOne(() => Person, person => person.accessHistories)
-    @JoinColumn({ name: 'person_id' })
-    person!: Person;
+    @ManyToOne(() => User, user => user.accessHistories)
+    @JoinColumn({ name: 'user_id' })
+    user!: User;
 
     @ManyToOne(() => Room, room => room.accessHistories)
     @JoinColumn({ name: 'room_id' })
