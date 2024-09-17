@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 
 AppDataSource.initialize()
     .then(() => {
-        console.log('Database connected');
+        console.log('Database connected!');
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`)
         })
@@ -21,11 +21,9 @@ AppDataSource.initialize()
         console.log(error)
     })
 
-//Home
 
+//HOME HEALTHY ROUTE
 app.get('/healthy', (req, res) => {
-    // res.send('Server is healthy');
-  
     res.status(200).json(
       {
         success: true,
