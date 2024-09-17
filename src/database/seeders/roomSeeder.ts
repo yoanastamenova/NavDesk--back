@@ -17,7 +17,6 @@ export const roomSeeder = async () => {
         room2.room_type = 'Workshop room';
         await room2.save();
 
-
         const room3 = new Room();
         room3.room_name = 'Barcelona';
         room3.capacity = 20;
