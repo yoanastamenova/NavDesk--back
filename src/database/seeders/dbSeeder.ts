@@ -6,7 +6,7 @@ import { roomSeeder } from "./roomSeeder";
 
 (async () => {
     try {
-        console.log("Starting seeders...");
+        console.log("********* Starting seeders... *********");
         console.log("Running personSeeder...");
         await personSeeder();
         console.log("personSeeder completed.");
@@ -27,7 +27,7 @@ import { roomSeeder } from "./roomSeeder";
         await administrationSeeder();
         console.log("administrationSeeder completed.");
 
-        console.log("All seeders executed successfully.");
+        console.log("********* All seeders executed successfully *********")
     } catch (error) {
         console.error("Error during seeding:", error);
     }

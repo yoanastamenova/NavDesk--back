@@ -19,14 +19,6 @@ export class Access_history extends BaseEntity{
     @Column({ name: 'exit_datetime'})
     exit_datetime!: Date
 
-    @Column({
-        type: "enum",
-        enum: ["approved", "denied", "pending"],
-        default: "pending",
-        name: 'state'
-    })
-    state!: 'approved' | 'denied' | 'pending';
-
     @ManyToOne(() => Person, person => person.accessHistories)
     @JoinColumn({ name: 'person_id' })
     person!: Person;
