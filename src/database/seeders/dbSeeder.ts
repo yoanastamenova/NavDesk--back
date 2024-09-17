@@ -1,3 +1,4 @@
+import { accessSeeder } from "./accessSeeder";
 import { personSeeder } from "./personSeeder"
 import { roomSeeder } from "./roomSeeder";
 
@@ -5,5 +6,6 @@ import { roomSeeder } from "./roomSeeder";
     console.log("Starting seeders...")
     await personSeeder();
     await roomSeeder();
+    await accessSeeder();
     
 })
