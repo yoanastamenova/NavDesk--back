@@ -8,7 +8,7 @@ export class Administration extends BaseEntity{
     @Column({ name: 'report_date'})
     report_date!: Date
 
-    @Column({ name: 'total_accesses'})
+    @Column({ name: 'total_entries'})
     total_accesses!: number
 
     @Column({ name: 'total_absences'})

@@ -27,16 +27,22 @@ export class User1726487383724 implements MigrationInterface {
                         isNullable: false
                     },
                     {
-                        name: "startup",
-                        type: "varchar",
-                        length: "100"
-                    },
-                    {
                         name: "email",
                         type: "varchar",
                         length: "100",
                         isNullable: false,
                         isUnique: true
+                    },
+                    {
+                        name: "password",
+                        type: "varchar",
+                        length: "255",
+                        isNullable: false
+                    },
+                    {
+                        name: "startup",
+                        type: "varchar",
+                        length: "100"
                     },
                     {
                         name: "DNI",

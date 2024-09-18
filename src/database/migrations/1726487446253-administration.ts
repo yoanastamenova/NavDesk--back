@@ -20,7 +20,7 @@ export class Administration1726487446253 implements MigrationInterface {
                         isNullable: false
                     },
                     {
-                        name: "total_accesses",
+                        name: "total_entries",
                         type: "int"
                     },
                     {

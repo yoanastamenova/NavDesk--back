@@ -13,11 +13,14 @@ export class User extends BaseEntity{
     @Column({ name: 'last_name'})
     last_name!: string
 
-    @Column({ name: 'startup'})
-    startup!: string
-
     @Column({ name: 'email'})
     email!: string
+
+    @Column({ name: 'password'})
+    password!: string
+
+    @Column({ name: 'startup'})
+    startup!: string
 
     @Column({ name: 'dni'})
     dni!: string
