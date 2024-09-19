@@ -481,7 +481,6 @@ Used technologies for the project:
 ✅ Add reports and details inside <br>
 ⬜ Add more calendar options <br>
 ⬜ StartUp and old users validations <br>
-⬜ ...  <br>
 
 ## Contribute to the project 📦
 
