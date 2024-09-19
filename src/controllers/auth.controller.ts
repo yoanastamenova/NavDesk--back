@@ -44,3 +44,63 @@ export const register = async (req:Request, res:Response) => {
         res.status(500).json
     }
 }
+
+export const login = async (req:Request, res:Response) => {
+    try {
+        const email=req.body.email;
+        const password=req.body.password;
+
+    if(!email || !password){
+        return res.json(400).json(
+            {
+                success: false,
+                message: "Email and password cannot be empty!"
+            }
+        )
+    }
+
+    const user = await User.findOne(
+        {
+            where: {email: email}
+        }
+    )
+
+    if(!user) {
+        return res.status(404).json(
+            {
+                success: false,
+                message: "No user responds to this email and password!"
+            }
+        )
+    }
+
+    const token = jwt.sign(
+        {
+            id: user.id,
+            email: user.email
+        },
+        process.env.JWT_SECRET as string,
+        {
+            expiresIn: "3h"
+        }
+    )
+
+    res.status(200).json(
+        {
+            success: true,
+            message: "Logged in successfully! Welcome!",
+            token: token
+        }
+    )
+
+    } catch (error) {
+        res.status(500).json(
+            {
+                success: false,
+                message: "Cannot log in",
+                error: error
+            }
+        )
+    }
+
+}
