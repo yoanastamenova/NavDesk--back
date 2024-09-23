@@ -27,8 +27,8 @@ export class Room1726487414509 implements MigrationInterface {
                     },
                     {
                         name: "room_type",
-                        type: "varchar",
-                        length: "50"
+                        type: "enum",
+                        enum: ["event", "meetup", "workshop", "office"]
                     }
                 ]
             }),

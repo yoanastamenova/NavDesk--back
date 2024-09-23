@@ -40,6 +40,11 @@ export class User1726487383724 implements MigrationInterface {
                         isNullable: false
                     },
                     {
+                        name: "role",
+                        type: "enum",
+                        enum: ["user", "admin"]
+                    },
+                    {
                         name: "startup",
                         type: "varchar",
                         length: "100"

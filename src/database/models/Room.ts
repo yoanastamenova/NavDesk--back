@@ -13,8 +13,13 @@ export class Room extends BaseEntity {
     @Column({ name: 'capacity' })
     capacity!: number;
 
-    @Column({ name: 'room_type' })
-    room_type!: string;
+    @Column({
+        name: 'room_type',
+        type: "enum",
+        enum: ["event", "meetup", "workshop", "office"],
+        default: "event"
+    })
+    room_type!: 'event' | 'meetup' | 'workshop' | 'office';
 
     @OneToMany(() => Access, access => access.room)
     accesses!: Access[];

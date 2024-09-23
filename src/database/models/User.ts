@@ -19,6 +19,14 @@ export class User extends BaseEntity{
     @Column({ name: 'password'})
     password!: string
 
+    @Column({
+        name: 'role',
+        type: "enum",
+        enum: ["user", "admin"],
+        default: "user"
+    })
+    role!: 'user' | 'admin';
+
     @Column({ name: 'startup'})
     startup!: string
 

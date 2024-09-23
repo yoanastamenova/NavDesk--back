@@ -12,6 +12,7 @@ export const userSeeder = async () => {
         user1.startup = 'Startup A';
         user1.email = 'john.doe@example.com';
         user1.password = bcrypt.hashSync("princess", 12);
+        user1.role = "admin";
         user1.dni = 'I123456';
         user1.phone = '123-456-7890';
         await user1.save();
@@ -22,6 +23,7 @@ export const userSeeder = async () => {
         user2.startup = 'Spark';
         user2.email = 'nina.fer@example.com';
         user2.password = bcrypt.hashSync("123456789", 12);
+        user2.role = "user";
         user2.dni = 'D123456';
         user2.phone = '123-456-7870';
         await user2.save();
@@ -33,6 +35,7 @@ export const userSeeder = async () => {
         user3.startup = 'Async';
         user3.email = 'hank@example.com';
         user3.password = bcrypt.hashSync("123456789", 12);
+        user3.role = "user";
         user3.dni = 'K347654';
         user3.phone = '123-456-9890';
         await user3.save();
@@ -43,6 +46,7 @@ export const userSeeder = async () => {
         user4.startup = 'Link&Co';
         user4.email = 'lena@example.com';
         user4.password = bcrypt.hashSync("123456789", 12);
+        user4.role = "user";
         user4.dni = 'O154993';
         user4.phone = '123-456-2222';
         await user4.save();
@@ -53,6 +57,7 @@ export const userSeeder = async () => {
         user5.startup = 'Google';
         user5.email = 'peete@example.com';
         user5.password = bcrypt.hashSync("123456789", 12);
+        user5.role = "user";
         user5.dni = 'S343612';
         user5.phone = '123-456-3434';
         await user5.save();
