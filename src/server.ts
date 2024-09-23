@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { AppDataSource } from './database/db';
+import authRouter from "./routes/authRouter"
 
 const app = express();
 app.use(cors())
@@ -31,3 +32,11 @@ app.get('/healthy', (req, res) => {
       }
     )
   })
+
+//ROUTES
+app.use('/api/auth', authRouter);
+// app.use('/api/users', userRouter);
+// app.use('/api/services', roomRouter);
+// app.use('/api/appointments', accessRouter);
+// app.use('/api/roles', accessHistoryRouter);
+// app.use('/api/roles', administrationRouter);
