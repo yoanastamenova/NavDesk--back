@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { User } from "../database/models/User";
 import bcrypt from "bcrypt";
+import { Access } from "../database/models/Access";
+import { Access_history } from "../database/models/Access_history";
+import { IsNull } from "typeorm";
 
 //GET ALL
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -61,56 +64,72 @@ export const getUserById = async (req: Request, res: Response) => {
 }
 
 //GET A SPECIFIC USER ACCESSES 
-export const getUserAccess = async (req: Request, res: Response) => {
+export const getUserCurrentAccess = async (req: Request, res: Response) => {
+    const userId = parseInt(req.params.id);
+
     try {
-        const userId = req.tokenData.id;
-    
-        const user = User.findOne(
-            {
-                select: {
-                    first_name: true,
-                    last_name: true,
-                    email: true,
-                    role: true
-                },
-                where: {
-                    id: userId
-                }
-            }
-        )
+        const currentAccess = await Access.findOne({
+            where: {
+                user_id: userId,
+                exit_datetime: IsNull()
+            },
+            relations: ['room']
+        });
+
+        if (!currentAccess) {
+            return res.status(404).json({
+                success: false,
+                message: "No current access found for user."
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Current access retrieved successfully.",
+            data: currentAccess
+        });
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "Error getting user's accesses!",
+            message: "Error retrieving current access.",
             error: error
-        })
+        });
     }
 }
 
 //GET A SPECIFIC USER HISTORY OF ACCESSES 
-export const getUserHistory = async (req: Request, res: Response) => {
+export const getUserAccessHistory = async (req: Request, res: Response) => {
+    const userId = parseInt(req.params.id);
+
     try {
-        const userId = req.tokenData.id;
-    
-        const user = User.findOne(
-            {
-                select: {
-                    first_name: true,
-                    last_name: true,
-                    email: true,
-                    role: true
-                },
-                where: {
-                    id: userId
-                }
+        const accessHistory = await Access_history.find({
+            where: {
+                user_id: userId
+            },
+            relations: ['room'], 
+            order: {
+                entry_datetime: 'DESC'
             }
-        )
+        });
+
+        if (accessHistory.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No access history found for user."
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Access history retrieved successfully.",
+            data: accessHistory
+        });
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "Error getting user's access history",
+            message: "Error retrieving access history.",
             error: error
-        })
+        });
     }
 }
 
