@@ -35,23 +35,118 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 //GET A SPECIFIC USER
 export const getUserById = async (req: Request, res: Response) => {
-    const userId = req.tokenData.id;
-
-    const user = User.findOne(
-        {
-            select: {
-                first_name: true,
-                last_name: true,
-                email: true,
-                role: true
-            },
-            where: {
-                id: userId
+    try {
+        const userId = req.tokenData.id;
+    
+        const user = User.findOne(
+            {
+                select: {
+                    first_name: true,
+                    last_name: true,
+                    email: true,
+                    role: true
+                },
+                where: {
+                    id: userId
+                }
             }
-        }
-    )
+        )
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error getting the selected user!",
+            error: error
+        })
+    }
 }
 
-//POST
+//GET A SPECIFIC USER ACCESSES 
+export const getUserAccesses = async (req: Request, res: Response) => {
+    try {
+        const userId = req.tokenData.id;
+    
+        const user = User.findOne(
+            {
+                select: {
+                    first_name: true,
+                    last_name: true,
+                    email: true,
+                    role: true
+                },
+                where: {
+                    id: userId
+                }
+            }
+        )
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error getting user's accesses!",
+            error: error
+        })
+    }
+}
 
-//DELETE
+//GET A SPECIFIC USER HISTORY OF ACCESSES 
+export const getUserHistory = async (req: Request, res: Response) => {
+    try {
+        const userId = req.tokenData.id;
+    
+        const user = User.findOne(
+            {
+                select: {
+                    first_name: true,
+                    last_name: true,
+                    email: true,
+                    role: true
+                },
+                where: {
+                    id: userId
+                }
+            }
+        )
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error getting user's access history",
+            error: error
+        })
+    }
+}
+
+//UPDATE USER
+export const modifyProfile = async (req: Request, res: Response) => {
+    try {
+        const user = await User.update(
+            {
+              id: req.tokenData.id
+            },
+            {
+              first_name: req.body.first_name,
+              last_name: req.body.last_name,
+              email: req.body.email,
+              startup: req.body.startup,
+              dni: req.body.dni,
+              phone: req.body.phone
+            }
+          )
+      
+          res.json(
+            {
+              success: true,
+              message: "User info updated!",
+              data: user
+            }
+          )
+        } catch (error) {
+          res.status(500).json(
+            {
+              success: false,
+              message: "Error updating user",
+              error: error
+            }
+          )
+        }
+}
+
+//DELETE USER
