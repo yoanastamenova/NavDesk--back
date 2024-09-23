@@ -34,9 +34,9 @@ app.get('/healthy', (req, res) => {
   })
 
 //ROUTES
-app.use('/api/auth', authRouter);
-// app.use('/api/users', userRouter);
-// app.use('/api/services', roomRouter);
-// app.use('/api/appointments', accessRouter);
-// app.use('/api/roles', accessHistoryRouter);
-// app.use('/api/roles', administrationRouter);
+app.use('/auth', authRouter);
+// app.use('/users', userRouter);
+// app.use('/services', roomRouter);
+// app.use('/appointments', accessRouter);
+// app.use('/roles', accessHistoryRouter);
+// app.use('/roles', administrationRouter);
