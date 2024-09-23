@@ -39,19 +39,24 @@ export const getAllUsers = async (req: Request, res: Response) => {
 //GET A SPECIFIC USER
 export const getUserById = async (req: Request, res: Response) => {
     try {
-        const userId = req.tokenData.id
-    
-        const user = User.findOne(
+        const userId = parseInt(req.params.id);
+        const user = await User.findOne(
             {
                 select: {
                     first_name: true,
                     last_name: true,
-                    email: true,
-                    role: true
+                    email: true
                 },
                 where: {
                     id: userId
                 }
+            }
+        )
+        res.status(200).json(
+            {
+                success: true,
+                message: "User retrived!",
+                data: user
             }
         )
     } catch (error) {

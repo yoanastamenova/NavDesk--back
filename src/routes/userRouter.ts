@@ -5,7 +5,7 @@ import { deleteUser, getAllUsers, getUserCurrentAccess,
 const router = express.Router();
 
 router.get('/all-users', getAllUsers); 
-router.get('/user-by-id', getUserById);
+router.get('/:id', getUserById);
 router.get('/:id/current-access', getUserCurrentAccess);
 router.get('/:id/access-history', getUserAccessHistory);
 router.put('/update', modifyUser);
