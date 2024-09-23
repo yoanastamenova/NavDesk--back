@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { User } from "../database/models/User";
 import bcrypt from "bcrypt";
 
-//GET
+//GET ALL
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
         const users = await User.find(
@@ -31,6 +31,25 @@ export const getAllUsers = async (req: Request, res: Response) => {
             error: error
         })
     }
+}
+
+//GET A SPECIFIC USER
+export const getUserById = async (req: Request, res: Response) => {
+    const userId = req.tokenData.id;
+
+    const user = User.findOne(
+        {
+            select: {
+                first_name: true,
+                last_name: true,
+                email: true,
+                role: true
+            },
+            where: {
+                id: userId
+            }
+        }
+    )
 }
 
 //POST
