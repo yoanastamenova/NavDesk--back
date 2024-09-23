@@ -150,3 +150,36 @@ export const modifyProfile = async (req: Request, res: Response) => {
 }
 
 //DELETE USER
+export const deleteUser = async (req:Request, res: Response) => {
+    try {
+        const userID = req.params.id
+
+        const user = await User.findOneBy({
+            id: parseInt(userID)
+        })
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found! Check ID!"
+            })
+        }
+
+        const deletedUser = await User.delete({
+            id: parseInt(userID)
+        }
+        )
+
+        return res.status(200).json({
+            success: true,
+            message: "User was deleted successfully!",
+            data: deletedUser
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "User can't be deleted",
+            error: error
+        })
+    }
+}
