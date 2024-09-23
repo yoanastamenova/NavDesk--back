@@ -61,7 +61,7 @@ export const getUserById = async (req: Request, res: Response) => {
 }
 
 //GET A SPECIFIC USER ACCESSES 
-export const getUserAccesses = async (req: Request, res: Response) => {
+export const getUserAccess = async (req: Request, res: Response) => {
     try {
         const userId = req.tokenData.id;
     
@@ -115,7 +115,7 @@ export const getUserHistory = async (req: Request, res: Response) => {
 }
 
 //UPDATE USER
-export const modifyProfile = async (req: Request, res: Response) => {
+export const modifyUser = async (req: Request, res: Response) => {
     try {
         const user = await User.update(
             {

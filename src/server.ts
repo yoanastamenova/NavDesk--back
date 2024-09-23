@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { AppDataSource } from './database/db';
 import authRouter from "./routes/authRouter"
+import userRouter from "./routes/userRouter"
 
 const app = express();
 app.use(cors())
@@ -35,7 +36,7 @@ app.get('/healthy', (req, res) => {
 
 //ROUTES
 app.use('/auth', authRouter);
-// app.use('/users', userRouter);
+app.use('/users', userRouter);
 // app.use('/services', roomRouter);
 // app.use('/appointments', accessRouter);
 // app.use('/roles', accessHistoryRouter);
