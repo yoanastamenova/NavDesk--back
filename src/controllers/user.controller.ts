@@ -39,7 +39,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 //GET A SPECIFIC USER
 export const getUserById = async (req: Request, res: Response) => {
     try {
-        const userId = req.tokenData.id;
+        const userId = req.tokenData.id
     
         const user = User.findOne(
             {

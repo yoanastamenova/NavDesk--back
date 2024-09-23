@@ -1,7 +1,6 @@
 export interface TokenDecoded {
     id: number,
-    role: string,
-    email: string
+    role: string
 }
 
 declare global {

@@ -14,11 +14,10 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
         }
 
         const token = req.headers.authorization.split(' ')[1];
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as TokenDecoded;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as TokenDecoded;  
         req.tokenData = {
             id: decoded.id,
-            role: decoded.role,
-            email: decoded.email
+            role: decoded.role
         }
         next();
     } catch (error) {

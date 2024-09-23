@@ -5,6 +5,7 @@ import { AppDataSource } from './database/db';
 import authRouter from "./routes/authRouter"
 import userRouter from "./routes/userRouter"
 import roomRouter from "./routes/roomRouter"
+import { auth } from './middlewares/auth';
 
 const app = express();
 app.use(cors())
