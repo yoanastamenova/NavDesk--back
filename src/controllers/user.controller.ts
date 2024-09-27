@@ -141,9 +141,11 @@ export const getUserAccessHistory = async (req: Request, res: Response) => {
 //UPDATE USER
 export const modifyUser = async (req: Request, res: Response) => {
     try {
+        const userId = parseInt(req.params.id);
+
         const user = await User.update(
             {
-              id: req.tokenData.id
+              id: userId
             },
             {
               first_name: req.body.first_name,
