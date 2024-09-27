@@ -74,7 +74,6 @@ export const checkIn = async (req: Request, res: Response) => {
 };
 
 //REGISTER CHECK-OUT
-//REGISTER CHECK-OUT
 export const checkOut = async (req: Request, res: Response) => {
     try {
         const reservationId = req.params.id;

@@ -6,6 +6,7 @@ import authRouter from "./routes/authRouter"
 import userRouter from "./routes/userRouter"
 import roomRouter from "./routes/roomRouter"
 import { auth } from './middlewares/auth';
+import accessRouter from "./routes/accessRouter"
 
 const app = express();
 app.use(cors())
@@ -40,6 +41,6 @@ app.get('/healthy', (req, res) => {
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/rooms', roomRouter);
-// app.use('/accesses', accessRouter);
+app.use('/accesses', accessRouter);
 // app.use('/access_histories', accessHistoryRouter);
 // app.use('/administration', administrationRouter);

@@ -1,12 +1,12 @@
 import express from "express";
-import {  } from "../controllers/access.controller";
+import { cancelReserve, checkIn, checkOut, getCurrentAccess, newReserve } from "../controllers/access.controller";
 
 const router = express.Router();
 
-router.get('/current/room/:id')
-router.post('/check-in')
-router.post('/check-out')
-router.post('/reserve')
-router.post('/cancel')
+router.get('/current/room/:id' ,getCurrentAccess)
+router.post('/check-in', checkIn)
+router.post('/check-out', checkOut)
+router.post('/reserve', newReserve)
+router.post('/cancel', cancelReserve)
 
 export default router;
