@@ -21,11 +21,11 @@ export class Access extends BaseEntity{
 
     @Column({
         type: "enum",
-        enum: ["approved", "denied", "pending"],
+        enum: ["reserved", "checked-in", "checked-out", "cancelled"],
         default: "pending",
         name: 'state'
     })
-    state!: 'approved' | 'denied' | 'pending';
+    state!: "reserved" | "checked-in" | "checked-out" | "cancelled";
 
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
