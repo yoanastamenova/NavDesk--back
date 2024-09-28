@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Access } from "../database/models/Access";
 import moment from "moment";
+import { Access_History } from "../database/models/Access_history";
 
 // GET CURRENT
 export const getCurrentAccess = async (req: Request, res: Response) => {
@@ -90,39 +91,48 @@ export const checkOut = async (req: Request, res: Response) => {
     try {
         const reservationId = parseInt(req.params.id);
         if (isNaN(reservationId)) {
-            return res.status(400).json({ success: false, message: "Invalid reservation ID format" });
+            return res.status(400).json({ success: false, message: "Invalid reservation ID format." });
         }
 
         const reservation = await Access.findOneBy({ id: reservationId });
         if (!reservation) {
-            return res.status(404).json({ success: false, message: "No reservation found with the provided ID" });
+            return res.status(404).json({ success: false, message: "No reservation found with this ID." });
         }
 
-        if (new Date() < new Date(reservation.entry_datetime) || reservation.state !== 'checked-in') {
+        // Ensuring that the user is checking out after the entry datetime
+        if (new Date() < new Date(reservation.entry_datetime)) {
             return res.status(400).json({
                 success: false,
-                message: "You must check-in first before checking out"
+                message: "Check-out is not allowed before the check-in date."
             });
         }
 
-        reservation.state = "checked-out";
-        reservation.exit_datetime = new Date();
-        await reservation.save();
+        // Move to Access_History
+        const history = new Access_History();
+        history.room_id = reservation.room_id;
+        history.user_id = reservation.user_id;
+        history.entry_datetime = reservation.entry_datetime;
+        history.exit_datetime = new Date();
+        history.access_state = "completed";
+        await history.save();
 
-        res.status(200).json({
+        // Optionally delete the access record or mark it as checked-out
+        await Access.delete({ id: reservationId });
+
+        res.json({
             success: true,
-            message: "Checked out successfully",
-            data: reservation
+            message: "Checked out and history updated successfully.",
+            data: history
         });
     } catch (error) {
         console.error("Error during check-out:", error);
         res.status(500).json({
             success: false,
             message: "Error during check-out",
-            error: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
+            error: (error as Error).message
         });
     }
-};
+}
 
 // CREATE RESERVATION
 export const newReservation = async (req: Request, res: Response) => {

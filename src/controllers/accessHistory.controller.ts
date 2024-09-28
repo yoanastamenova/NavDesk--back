@@ -1,51 +1,41 @@
 import { Request, Response } from "express";
 import { Access_History } from "../database/models/Access_history";
+import { MoreThanOrEqual, LessThanOrEqual } from "typeorm";
 
-//GET HISTORY BY DATE
 export const getHistories = async (req: Request, res: Response) => {
     try {
-        const start_date = req.body.start_date;
-        const end_date = req.body.end_date;
+        const { start_date, end_date } = req.body;
 
-        const period = await Access_History.find(
-            {
-                select: {
-                    room_id: true,
-                    user_id: true,
-                    entry_datetime: true,
-                    exit_datetime: true
-                },
-                where: {
-                    entry_datetime: start_date,
-                    exit_datetime: end_date
-                }
+        // Convert query parameters to Date objects
+        const startDate = new Date(start_date as string);
+        const endDate = new Date(end_date as string);
+
+        const period = await Access_History.find({
+            select: ['room_id', 'user_id', 'entry_datetime', 'exit_datetime'],
+            where: {
+                entry_datetime: MoreThanOrEqual(startDate),
+                exit_datetime: LessThanOrEqual(endDate)
             }
-        )
+        });
 
-        if(!period) {
-            return res.status(404).json(
-                {
-                    success: false,
-                    message: "Cannot obtain data for this time period!"
-                }
-            )
+        if (period.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No data available for this time period."
+            });
         }
 
-        res.status(200).json(
-            {
-                success: true,
-                message: "History for this time period retrived successfully!",
-                data: period
-            }
-        )
-    } catch (err) {
-        res.status(500).json(
-            {
-                success: false,
-                message: "Error obtaining access histories for the selected date range!",
-                error: err
-            }
-        )
+        res.json({
+            success: true,
+            message: "History for this time period retrieved successfully!",
+            data: period
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error obtaining access histories for the selected date range!",
+            error: (error as Error).message
+        });
     }
 }
 
@@ -53,33 +43,32 @@ export const getHistories = async (req: Request, res: Response) => {
 export const getRoomHistory = async (req: Request, res: Response) => {
     try {
         const roomId = parseInt(req.params.id);
-
-        const room = await Access_History.findOneBy({
-            id: roomId
-        })
-        
-        if(!room){
-            return res.status(404).json(
-                {
-                    success: false,
-                    message: "The selected room does not exist!"
-                }
-            )
+        if (isNaN(roomId)) {
+            return res.status(400).json({ success: false, message: "Invalid room ID format" });
         }
 
-        return res.status(200).json({
+        const room = await Access_History.find({
+            where: { room_id: roomId }
+        });
+
+        if (room.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No history found for the selected room."
+            });
+        }
+
+        res.json({
             success: true,
             message: "History for the selected room obtained successfully!",
             data: room
-        })
+        });
 
-    } catch (err) {
-        res.status(500).json(
-            {
-                success: false,
-                message: "Error obtaining access histories for the selected room!",
-                error: err
-            }
-        )
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error obtaining access histories for the selected room!",
+            error: (error as Error).message
+        });
     }
 }
