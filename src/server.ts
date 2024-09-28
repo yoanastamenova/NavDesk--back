@@ -44,4 +44,4 @@ app.use('/users', userRouter);
 app.use('/rooms', roomRouter);
 app.use('/access', accessRouter);
 app.use('/history', historyRouter);
-app.use('/administration', adminRouter);
+app.use('/report', adminRouter);
