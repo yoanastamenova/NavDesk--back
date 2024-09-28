@@ -1,92 +1,104 @@
 import { Request, Response } from "express";
 import { Access } from "../database/models/Access";
+import moment from "moment";
 
-//GET CURRENT ACCESS
+// GET CURRENT
 export const getCurrentAccess = async (req: Request, res: Response) => {
-    try {
+    const roomId = parseInt(req.params.id);
 
-            const accesses = Access.find(
-            {
-                select: {
-                    user_id: true,
-                    room_id: true,
-                    entry_datetime: true,
-                    exit_datetime: true,
-                    state: true
-                }
-            }
-        )
-
-        res.json(
-            {
-                success: true,
-                message: "All current access requests are retrived successfully!",
-                data: accesses
-            }
-        )
-
-    } catch (error) {
-        res.status(500).json({
+    if (isNaN(roomId)) {
+        return res.status(400).json({
             success: false,
-            message: "Error getting all the users",
-            error: error
-        })
+            message: "Invalid room ID format."
+        });
     }
-}
 
-//REGISTER CHECK-IN
-export const checkIn = async (req: Request, res: Response) => {
     try {
-        const reservationId = req.params.id;
+        const accesses = await Access.find({
+            where: {
+                room_id: roomId
+            },
+            select: ['user_id', 'room_id', 'entry_datetime', 'exit_datetime', 'state']
+        });
 
-        const reservation = await Access.findOneBy({ id: parseInt(reservationId) });
-        if (!reservation) {
+        if (accesses.length === 0) {
             return res.status(404).json({
                 success: false,
-                message: "No reservation found with the provided ID"
+                message: "No current access requests found for this room."
             });
         }
 
-        if (new Date(reservation.entry_datetime) <= new Date()) {
+        res.json({
+            success: true,
+            message: "Current access requests for the room are retrieved successfully!",
+            data: accesses
+        });
+    } catch (error) {
+        console.error("Error getting current access for room:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error getting current access for the room",
+            error: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
+        });
+    }
+}
+
+// REGISTER AS CHECK-IN
+export const checkIn = async (req: Request, res: Response) => {
+    try {
+        const reservationId = parseInt(req.params.id);
+        if (isNaN(reservationId)) {
+            return res.status(400).json({ success: false, message: "Invalid reservation ID format" });
+        }
+
+        const reservation = await Access.findOneBy({ id: reservationId });
+        if (!reservation) {
+            return res.status(404).json({ success: false, message: "No reservation found with the provided ID" });
+        }
+
+        const currentTime = moment();
+        const entryTime = moment(reservation.entry_datetime);
+
+        // Allowing a 5 minute grace period before the actual entry time
+        if (currentTime.isBefore(entryTime.subtract(5, 'minutes'))) {
             return res.status(400).json({
                 success: false,
-                message: "Check-in time has not started yet"
+                message: "Check-in time has not started yet."
             });
         }
 
         reservation.state = "checked-in";
-        reservation.entry_datetime = new Date();
+        reservation.entry_datetime = new Date();  
 
         await reservation.save();
-
         res.status(200).json({
             success: true,
             message: "Checked in successfully",
             data: reservation
         });
     } catch (error) {
+        console.error("Error during check-in:", error);
         res.status(500).json({
             success: false,
             message: "Error during check-in",
-            error: error
+            error: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
         });
     }
 };
-
 //REGISTER CHECK-OUT
 export const checkOut = async (req: Request, res: Response) => {
     try {
-        const reservationId = req.params.id;
-
-        const reservation = await Access.findOneBy({ id: parseInt(reservationId) });
-        if (!reservation) {
-            return res.status(404).json({
-                success: false,
-                message: "No reservation found with the provided ID"
-            });
+        const reservationId = parseInt(req.params.id);
+        if (isNaN(reservationId)) {
+            return res.status(400).json({ success: false, message: "Invalid reservation ID format" });
         }
 
-        if (new Date() < new Date(reservation.entry_datetime)) {
+        const reservation = await Access.findOneBy({ id: reservationId });
+        if (!reservation) {
+            return res.status(404).json({ success: false, message: "No reservation found with the provided ID" });
+        }
+
+        if (new Date() < new Date(reservation.entry_datetime) || reservation.state !== 'checked-in') {
             return res.status(400).json({
                 success: false,
                 message: "You must check-in first before checking out"
@@ -95,7 +107,6 @@ export const checkOut = async (req: Request, res: Response) => {
 
         reservation.state = "checked-out";
         reservation.exit_datetime = new Date();
-
         await reservation.save();
 
         res.status(200).json({
@@ -104,82 +115,93 @@ export const checkOut = async (req: Request, res: Response) => {
             data: reservation
         });
     } catch (error) {
+        console.error("Error during check-out:", error);
         res.status(500).json({
             success: false,
             message: "Error during check-out",
-            error: error
+            error: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
         });
     }
 };
 
-//CREATE RESERVATION
-export const newReserve = async(req: Request, res: Response) => {
+// CREATE RESERVATION
+export const newReservation = async (req: Request, res: Response) => {
     try {
-        const room_id = req.body.room_id;
+        const { room_id, entry_datetime, exit_datetime } = req.body;
         const user_id = req.tokenData.id;
 
-        if(!user_id || !room_id){
+        // Validate presence of all required fields
+        if (!room_id || !entry_datetime || !exit_datetime) {
             return res.status(400).json({
                 success: false,
-                message: "Room number is needed for creating a new reservation!"
-            })
+                message: "Room number, entry time, and exit time are required!"
+            });
         }
 
-        const reservation = await Access.create(
-            {
-                room_id: room_id,
-                user_id: user_id
-            }
-        ).save()
+        // Create date objects
+        const entryDate = new Date(entry_datetime);
+        const exitDate = new Date(exit_datetime);
 
-        res.status(201).json(
-            {
-                success: true,
-                message: "New reservation created successfully!",
-                data: reservation
-            }
-        )
-    } catch (error) {
-        res.status(500).json(
-            {
+        // Time validation: exit time must be after entry time
+        if (exitDate <= entryDate) {
+            return res.status(400).json({
                 success: false,
-                message: "Error creating a new reservation!",
-                error: error
-            }
-        )
+                message: "Exit time must be later than entry time."
+            });
+        }
+
+        // Create new reservation
+        const reservation = await Access.create({
+            room_id,
+            user_id,
+            entry_datetime: entryDate,
+            exit_datetime: exitDate,
+            state: "reserved"  // Assuming "reserved" is initial state
+        }).save();
+
+        res.status(201).json({
+            success: true,
+            message: "New reservation created successfully!",
+            data: reservation
+        });
+    } catch (error) {
+        console.error("Error creating a new reservation:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error creating a new reservation!",
+            error: (error as Error).message  // Consider filtering error details in production
+        });
     }
 }
 
 //CANCEL RESERVATION
-export const cancelReserve = async(req: Request, res: Response) => {
+export const cancelReserve = async (req: Request, res: Response) => {
     try {
-        const reservationId = req.body.id;
+        const reservationId = parseInt(req.params.id);
+        if (isNaN(reservationId)) {
+            return res.status(400).json({ success: false, message: "Invalid reservation ID format" });
+        }
 
-        const reservation = await Access.findOneBy({
-            id: parseInt(reservationId)
-        })
-
-        if(!reservation) {
+        const reservation = await Access.findOneBy({ id: reservationId });
+        if (!reservation) {
             return res.status(404).json({
                 success: false,
                 message: "No reservation with this ID exists!"
-            })
+            });
         }
 
-        const cancelation = await Access.delete({
-            id: parseInt(reservationId)
-        })
+        await Access.delete({ id: reservationId });
 
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
-            message: "Reservation cancelled successfully!",
-            data: cancelation
-        })
+            message: "Reservation cancelled successfully!"
+        });
     } catch (error) {
-        return res.status(500).json({
+        console.error("Error cancelling reservation:", error);
+        res.status(500).json({
             success: false,
             message: "Reservation can't be cancelled",
-            error: error
-        })
+            error: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
+        });
     }
 }
