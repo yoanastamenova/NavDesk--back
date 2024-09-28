@@ -32,13 +32,14 @@ export const register = async (req: Request, res: Response) => {
             }
         ).save()
 
-        res.status(201).json(
-            {
-                success: true,
-                message: "You registered successfully! Welcome!",
-                data: newUser
+        res.status(201).json({
+            success: true,
+            message: "You registered successfully! Welcome!",
+            data: {
+                id: newUser.id,
+                email: newUser.email
             }
-        )
+        });
     } catch (error) {
         res.status(500).json(
             {

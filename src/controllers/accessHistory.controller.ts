@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Access_history } from "../database/models/Access_history";
+import { Access_History } from "../database/models/Access_history";
 
 //GET HISTORY BY DATE
 export const getHistories = async (req: Request, res: Response) => {
@@ -7,7 +7,7 @@ export const getHistories = async (req: Request, res: Response) => {
         const start_date = req.body.start_date;
         const end_date = req.body.end_date;
 
-        const period = await Access_history.find(
+        const period = await Access_History.find(
             {
                 select: {
                     room_id: true,
@@ -54,7 +54,7 @@ export const getRoomHistory = async (req: Request, res: Response) => {
     try {
         const roomId = parseInt(req.params.id);
 
-        const room = await Access_history.findOneBy({
+        const room = await Access_History.findOneBy({
             id: roomId
         })
         

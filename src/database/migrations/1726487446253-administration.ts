@@ -29,11 +29,11 @@ export class Administration1726487446253 implements MigrationInterface {
                     },
                     {
                         name: "frequent_users",
-                        type: "text"
+                        type: "json"
                     },
                     {
                         name: "infrequent_users",
-                        type: "text"
+                        type: "json"
                     }
                 ]
             }),

@@ -31,6 +31,11 @@ export class AccessHistory1726487434146 implements MigrationInterface {
                     {
                         name: "exit_datetime",
                         type: "datetime"
+                    },
+                    {
+                        name: "access_state",
+                        type: "enum",
+                        enum: ["reserved", "no-show", "completed", "cancelled"]
                     }
                 ],
                 foreignKeys: [

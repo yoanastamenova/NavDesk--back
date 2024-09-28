@@ -8,7 +8,6 @@ import roomRouter from "./routes/roomRouter"
 import accessRouter from "./routes/accessRouter"
 import historyRouter from "./routes/historyRouter"
 import adminRouter from "./routes/adminRouter"
-import { auth } from './middlewares/auth';
 
 const app = express();
 app.use(cors())

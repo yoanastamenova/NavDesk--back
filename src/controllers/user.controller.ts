@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { User } from "../database/models/User";
 import bcrypt from "bcrypt";
 import { Access } from "../database/models/Access";
-import { Access_history } from "../database/models/Access_history";
 import { IsNull } from "typeorm";
+import { Access_History } from "../database/models/Access_history";
 
 //GET ALL
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -107,7 +107,7 @@ export const getUserAccessHistory = async (req: Request, res: Response) => {
     const userId = parseInt(req.params.id);
 
     try {
-        const accessHistory = await Access_history.find({
+        const accessHistory = await Access_History.find({
             where: {
                 user_id: userId
             },

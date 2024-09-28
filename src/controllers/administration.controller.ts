@@ -55,8 +55,8 @@ export const getDateReport = async (req: Request, res: Response) => {
                 {
                     select: {
                         report_date: true,
+                        total_entries: true,
                         total_absences: true,
-                        total_accesses: true,
                         frequent_users: true,
                         infrequent_users: true
                     },
@@ -87,10 +87,23 @@ export const getDateReport = async (req: Request, res: Response) => {
         res.status(500).json(
             {
                 success: false,
-
+                message: "Error obtaining report for the selected date",
+                error: error
             }
         )
      }
 }
 
 // REPORT FOR SPECIFIC ROOM
+export const getRoomReport = async (req: Request, res: Response) => {
+    try {
+        const room_id = req.body.room_id;
+        
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: "Error obtaining report for the selected room!",
+            error: error.message
+        })
+    }
+}
