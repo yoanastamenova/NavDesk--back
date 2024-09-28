@@ -7,6 +7,7 @@ import userRouter from "./routes/userRouter"
 import roomRouter from "./routes/roomRouter"
 import accessRouter from "./routes/accessRouter"
 import historyRouter from "./routes/historyRouter"
+import adminRouter from "./routes/adminRouter"
 import { auth } from './middlewares/auth';
 
 const app = express();
@@ -44,4 +45,4 @@ app.use('/users', userRouter);
 app.use('/rooms', roomRouter);
 app.use('/access', accessRouter);
 app.use('/history', historyRouter);
-// app.use('/administration', administrationRouter);
+app.use('/administration', adminRouter);
