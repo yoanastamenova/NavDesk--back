@@ -4,7 +4,40 @@ import { Access_history } from "../database/models/Access_history";
 //GET HISTORY BY DATE
 export const getHistories = async (req: Request, res: Response) => {
     try {
-        
+        const start_date = req.body.start_date;
+        const end_date = req.body.end_date;
+
+        const period = await Access_history.find(
+            {
+                select: {
+                    room_id: true,
+                    user_id: true,
+                    entry_datetime: true,
+                    exit_datetime: true
+                },
+                where: {
+                    entry_datetime: start_date,
+                    exit_datetime: end_date
+                }
+            }
+        )
+
+        if(!period) {
+            return res.status(404).json(
+                {
+                    success: false,
+                    message: "Cannot obtain data for this time period!"
+                }
+            )
+        }
+
+        res.status(200).json(
+            {
+                success: true,
+                message: "History for this time period retrived successfully!",
+                data: period
+            }
+        )
     } catch (err) {
         res.status(500).json(
             {
@@ -39,7 +72,7 @@ export const getRoomHistory = async (req: Request, res: Response) => {
             message: "History for the selected room obtained successfully!",
             data: room
         })
-        
+
     } catch (err) {
         res.status(500).json(
             {
