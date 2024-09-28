@@ -5,8 +5,9 @@ import { AppDataSource } from './database/db';
 import authRouter from "./routes/authRouter"
 import userRouter from "./routes/userRouter"
 import roomRouter from "./routes/roomRouter"
-import { auth } from './middlewares/auth';
 import accessRouter from "./routes/accessRouter"
+import historyRouter from "./routes/historyRouter"
+import { auth } from './middlewares/auth';
 
 const app = express();
 app.use(cors())
@@ -41,6 +42,6 @@ app.get('/healthy', (req, res) => {
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/rooms', roomRouter);
-app.use('/accesses', accessRouter);
-// app.use('/access_histories', accessHistoryRouter);
+app.use('/access', accessRouter);
+app.use('/history', historyRouter);
 // app.use('/administration', administrationRouter);
