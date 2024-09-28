@@ -7,14 +7,16 @@ import {
     deleteRoom,
     getRoomCurrentStatus  
 } from "../controllers/room.controller";
+import { isAdmin } from "../middlewares/admin";
+import { auth } from "../middlewares/auth";
 
 const router = express.Router();
 
-router.get('/all', getAllRooms);
-router.get('/:id', getRoomById);
-router.get('/:id/current-state', getRoomCurrentStatus);
-router.post('/create', createRoom); 
-router.put('/:id/update-room', updateRoom);
-router.delete('/:id/delete', deleteRoom); 
+router.get('/all', auth ,getAllRooms);
+router.get('/:id', auth, getRoomById);
+router.get('/:id/current-state', auth, getRoomCurrentStatus);
+router.post('/create', auth, isAdmin, createRoom); 
+router.put('/:id/update', auth, isAdmin, updateRoom);
+router.delete('/:id/delete', auth, isAdmin, deleteRoom); 
 
 export default router;
