@@ -84,397 +84,62 @@ Used technologies for the project:
 7. `$ npm run db:refresh` to execute everything from the beginning
 8. `$ npm run dev` to run our server
 
-## Endpoints ⚒
+## 🌐 Endpoints 
+
+### 🔒 Authentication
+
+| Method | URI       | Action         | Auth                | Body                                                                                   |
+|--------|-----------|----------------|---------------------|----------------------------------------------------------------------------------------|
+| POST   | auth/register  | Register user  | N/A (public)        | `{  "email": "userEmail", "password": "userPassword" }` |
+| POST   | auth/login     | Login user     | N/A (public)        | `{ "email": "userEmail", "password": "userPassword" }`                                |
+
+### 👤 Users
+
+| Method | URI           | Action              | Auth      | Body                                                                                   |
+|--------|---------------|---------------------|-----------|----------------------------------------------------------------------------------------|
+| GET    | /users/all-users        | View all users      | Token (admin) | N/A                                                                                    |
+| GET    | /users/{id}   | View user by ID     | Token (admin) | N/A                                                                                    |
+| PUT    | /users/{id}   | Update user by ID   | Token (user) | `{ "usernname": "newUserName", "startUp": "newStartUp", "email": "newEmail" }`            |
+| DELETE | /users/{id}   | Delete user by ID   | Token (user) | N/A                                                                                    |
+| GET    | /users/{id}/current-access       | Display all current accesses of users ID   | Token (user) | N/A                                                                                    |
+| GET    | /users/{id}/access-history | View user access histories   | Token (user) | N/A                                                                                    |
+
+### 🏠 Rooms
+
+| Method | URI            | Action              | Auth        | Body                                                                                   |
+|--------|----------------|---------------------|-------------|----------------------------------------------------------------------------------------|
+| GET    | /rooms/all      | View all rooms   | Token(user) | N/A                                                                                    |
+| GET   | /rooms/{id}/current-state     | Display current state of a room      | Token (user) |             |
+| GET    | /rooms/{id} | Display room by ID  | Token (user) | N/A                                                                                    |
+| PUT    | /rooms/{id} | Update a room by ID | Token (admin) |    name, capacity, type  |
+| DELETE | /rooms/{id} | Delete room by ID | Token (admin) | N/A                                                                                    |
+
+### 🗓 Bookings
+
+| Method | URI          | Action             | Auth      | Body                                                |
+|--------|--------------|--------------------|-----------|-----------------------------------------------------|
+| GET    | /access/room/{id}    | View current room state by ID   | Token (admin) | N/A                                                 |
+| POST   | /access/reserve     | Create new booking       | Token (user) | `{ "room_id": "id" }` ,  `{ "date": "YYYY-MM-DD" }`            |
+| POST    | /access/check-in/{id} | Check-in to a booking by ID   | Token (user) | N/A                                                 |
+| POST    | /access/check-out/{id}| Check-out to a booking by ID  | Token (user) | N/A        |
+| DEL | /access/cancel/{id} | Delete a booking by ID| Token (user) | N/A                                                 |
+
+### 🗓 Bookings History
+
+| Method | URI          | Action             | Auth      | Body                                                |
+|--------|--------------|--------------------|-----------|-----------------------------------------------------|
+| GET    | /history/period   | View all accesses for certain date period   | Token (admin) | `{ "start_date": "YYYY-MM-DD", "end_date": "YYYY-MM-DD"}`                             |
+| GET   | /history/room/{id}     | Create order       | Token (admin) | N/A            |
+
+### 📚 REPORTS
+
+| Method | URI          | Action             | Auth      | Body                                                |
+|--------|--------------|--------------------|-----------|-----------------------------------------------------|
+| POST    | /report/daily | Create a daily report for all bookings  | Token (admin) | N/A                                                 |
+| GET   | /report/room-usage/{id}    | Create report for a room by ID       | Token (admin) | N/A     |
+| GET    | /report/period | Create a report for specific date period   | Token (admin) | `{"start_date" : "YYYY-MM-DD", "end_date": "YYYY-MM-DD"}`                                                |
+| DEL | /report/delete/{id} | Delete a report by ID| Token (admin) | N/A  
 
-<details>
-<summary>Authentication 🔓</summary> 
-
-- REGISTER
-
-          POST http://localhost:4000/api/register
-
-    body:
-
-    ```js
-        {
-            "email": "name@mail.com",
-            "password": "123456789"
-        }
-    ```
-
-<br>
-
-- LOGIN	
-
-          POST http://localhost:4000/api/login
-
-    body:
-
-    ```js
-        {
-            "email": "name@mail.com",
-            "password": "123456789"
-        }
-    ```
-</details>
-
-<details>
-<summary>Users 🗂</summary>
-
-- GET ALL USERS (only admin)
-
-          GET http://localhost:4000/api/users
-
-    auth:
-
-    ```js
-        your token
-    ```
-
-<br>
-
-- GET USER PROFILE 
-
-          GET http://localhost:4000/api/users/profile
-
-    auth:
-
-    ```js
-        your token
-    ```
-
-<br>
-
-- UPDATE USER PROFILE BY ID
-
-          PUT http://localhost:4000/api/profile/update
-
-    body:
-
-    ```js
-        {
-        "email": "newemail@mail.com"
-        }
-    ```
-
-    auth:
-
-    ```js
-        your token
-    ```
-<br>
-
-- GET USER BY EMAIL (only admin)
-
-          GET http://localhost:4000/api/users/:email
-
-    body:
-
-    ```js
-        {
-            "email": "example@mail.com"
-        }
-    ```
-
-    auth:
-
-    ```js
-        your token
-    ```
-<br>
-
-
-- DELETE USER BY ID (only admin)
-
-          DELETE http://localhost:4000/api/users/:id
-
-    body:
-
-    ```js
-        {
-            "id": 3     (the id of the user we want to delete)
-        }
-    ```
-
-    auth:
-
-    ```js
-        your token
-    ```
-
-<br>
-
-- CHANGE USER ROLE BY ID (only admin)
-
-          PUT http://localhost:4000/api/users/:id/role
-
-    auth:
-
-    ```js
-        your token
-    ```
-    body:
-
-    ```js
-        {
-            "id" : 1 (this is the id of the user we will update)
-            "role_id": 3     (the new role_id for our user goes here)
-        }
-    ```
-
-</details>
-
-<details>
-<summary>Appointments ☎️</summary>
-
-- CREATE APPOINTMENT
-
-          POST http://localhost:4000/api/appointments/create
-
-    body:
-
-    ```js
-        {
-        "appointment_date": "2024/01/01",
-        "service_id": 2
-        }
-    ```
-
-    auth:
-
-    ```js
-        your token
-    ```
-
-<br>
-
-- UPDATE USER APPOINTMENT BY ID
-
-          PUT http://localhost:4000/api/appointments/change
-
-    body:
-
-    ```js
-        {
-        "id": 3           (the id of the appointment to update)
-        "appointment_date": "2024/07/20"        (the new date)
-        }
-    ```
-
-    auth:
-
-    ```js
-        your token
-    ```
-
-<br>
-
-- GET USER APPIONTMENTS
-
-          GET http://localhost:4000/api/appointments/scheduled
-
-    auth:
-
-    ```js
-        your token
-    ```
-
-<br>
-
-- DELETE APPOINTMENT BY ID
-
-          DELETE http://localhost:4000/api/appointments/delete
-
-    auth:
-
-    ```js
-        your token
-    ```
-    body:
-
-    ```js
-       {
-        "id": 3 (of the appointment you want to delete)
-       }
-    ```
-
-<br>
-
-- GET APPOINTMENT BY ID
-
-          GET http://localhost:4000/api/appointments/:id
-
-    auth:
-
-    ```js
-        your token
-    ```
-
-    body:
-
-    ```js
-        {
-        "id": 3           (the id of the appointment)
-        }
-    ```
-
-</details>
-
-<details>
-<summary>Services 🪪</summary>
-
-- GET ALL SERVICES 
-
-          GET http://localhost:4000/api/services
-
-    auth:
-
-    ```js
-        your token
-    ```
-
-<br>
-
-- CREATE SERVICE (only for admin)
-
-          POST http://localhost:4000/api/services
-
-    body:
-
-    ```js
-        {
-        "service_name": "name",
-        "description": "what is the service about"
-        }
-    ```
-
-    auth:
-
-    ```js
-        your token
-    ```
-
-<br>
-
-- UPDATE SERVICE BY ID (only admin)
-
-          PUT http://localhost:4000/api/services/:id
-
-    body:
-
-    ```js
-        {
-        "id": 3 (the id of the service to be updated)
-        "service_name": "new name"     (new info)
-        }
-    ```
-
-    auth:
-
-    ```js
-        your token
-    ```
-
-<br>
-
-- DELETE SERVICE BY ID (only admin)
-
-          DELETE http://localhost:4000/api/services/:id
-
-    auth:
-
-    ```js
-        your token
-    ```
-
-    body:
-     ```js
-        {
-            "id" : 3
-        }
-    ```
-
-</details>
-
-<details>
-<summary>Roles 🪪</summary>
-
-- GET ALL ROLES (only admin)
-      
-     GET http://localhost:4000/api/roles
-
-     
-    auth:
-
-    ```js
-        your token
-    ```
-
-<br>
-
-- CREATE ROLE (only admin)
-      
-      POST http://localhost:4000/api/roles/create
-    
-
-    body:
-
-    ```js
-        {
-        "name": "newRole"
-        }
-    ```
-
-    auth:
-
-    ```js
-        your token
-    ```
-<br>
-
-- UPDATE ROLE BY ID (only admin)
-     
-     PUT http://localhost:4000/api/roles/update/:id
-
-    body:
-
-    ```js
-        {
-        "id": 8,
-        "name": "newName"
-        }
-    ```
-
-     
-    auth:
-
-    ```js
-        your token
-    ```
-
-<br>
-
-- DELETE ROLE BY ID (only admin)
-
-    PUT http://localhost:4000/api/roles/delete
-
-      body:
-
-    ```js
-        {
-        "id": 8
-        }
-    ```
-
-     
-    auth:
-
-    ```js
-        your token
-    ```
-
-<br>
-</details>
 
 ## Future functionalities 
 <br>
