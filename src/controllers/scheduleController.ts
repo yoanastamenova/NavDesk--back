@@ -1,12 +1,12 @@
 import cron from 'node-cron';
-import { Access } from '../database/models/Access';
-import { Access_History } from '../database/models/Access_history';
+import { Booking } from '../database/models/Booking';
+import { Booking_History } from '../database/models/Booking_history';
 import { LessThanOrEqual, Not } from 'typeorm'; // Add this import
 
 const moveExpiredReservationsToHistory = async () => {
     const currentDate = new Date();
 
-    const expiredReservations = await Access.find({
+    const expiredReservations = await Booking.find({
         where: {
             exit_datetime: LessThanOrEqual(currentDate),
             state: Not("checked-out" as "reserved" | "checked-in" | "checked-out" | "cancelled") // Specify the type
@@ -16,7 +16,7 @@ const moveExpiredReservationsToHistory = async () => {
     const validStates = ["reserved", "cancelled", "no-show", "completed"]; // Define valid states
 
     const historyPromises = expiredReservations.map(reservation => {
-        const history = new Access_History();
+        const history = new Booking_History();
         history.room_id = reservation.room_id;
         history.user_id = reservation.user_id;
         history.entry_datetime = reservation.entry_datetime;
@@ -29,7 +29,7 @@ const moveExpiredReservationsToHistory = async () => {
 
     // Optionally, delete expired reservations from the Access table
     const deletePromises = expiredReservations.map(reservation => {
-        return Access.delete({ id: reservation.id });
+        return Booking.delete({ id: reservation.id });
     });
 
     await Promise.all(deletePromises);

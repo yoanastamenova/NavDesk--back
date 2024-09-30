@@ -1,44 +1,41 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
-import { Access } from "./Access"
-import { Access_History } from "./Access_history"; 
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Booking } from './Booking';
+import { Booking_History } from "./Booking_history";
 
 @Entity("user")
-export class User extends BaseEntity{
+export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
-    id!: number
+    id!: number;
 
-    @Column({ name: 'first_name'})
-    first_name!: string
-
-    @Column({ name: 'last_name'})
-    last_name!: string
+    @Column({ name: 'username'})
+    username!: string;
 
     @Column({ name: 'email'})
-    email!: string
+    email!: string;
 
     @Column({ name: 'password'})
-    password!: string
+    password!: string;
 
     @Column({
         name: 'role',
-        type: "enum",
-        enum: ["user", "admin"],
-        default: "user"
+        type: 'enum',
+        enum: ['user', 'admin'],
+        default: 'user'
     })
     role!: 'user' | 'admin';
 
     @Column({ name: 'startup'})
-    startup!: string
+    startup!: string;
 
     @Column({ name: 'dni'})
-    dni!: string
+    dni!: string;
 
-    @Column({ name: 'phone'})
-    phone!: string
+    @Column({ name: 'phone' })
+    phone!: string;
 
-    @OneToMany(() => Access, access => access.user)
-    accesses!: Access[];
+    @OneToMany(() => Booking, booking => booking.user)
+    bookings!: Booking[];
 
-    @OneToMany(() => Access_History, accessHistory => accessHistory.user)
-    accessHistories!: Access_History[];
+    @OneToMany(() => Booking_History, bookingHistory => bookingHistory.user)
+    bookingHistory!: Booking_History[];
 }

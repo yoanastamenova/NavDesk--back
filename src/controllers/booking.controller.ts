@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Access } from "../database/models/Access";
+import { Booking } from "../database/models/Booking";
 import moment from "moment";
-import { Access_History } from "../database/models/Access_history";
+import { Booking_History } from "../database/models/Booking_history";
 
 // GET CURRENT
 export const getCurrentAccess = async (req: Request, res: Response) => {
@@ -15,14 +15,14 @@ export const getCurrentAccess = async (req: Request, res: Response) => {
     }
 
     try {
-        const accesses = await Access.find({
+        const bookings = await Booking.find({
             where: {
                 room_id: roomId
             },
             select: ['user_id', 'room_id', 'entry_datetime', 'exit_datetime', 'state']
         });
 
-        if (accesses.length === 0) {
+        if (bookings.length === 0) { 
             return res.status(404).json({
                 success: false,
                 message: "No current access requests found for this room."
@@ -32,7 +32,7 @@ export const getCurrentAccess = async (req: Request, res: Response) => {
         res.json({
             success: true,
             message: "Current access requests for the room are retrieved successfully!",
-            data: accesses
+            data: bookings
         });
     } catch (error) {
         console.error("Error getting current access for room:", error);
@@ -52,7 +52,7 @@ export const checkIn = async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, message: "Invalid reservation ID format" });
         }
 
-        const reservation = await Access.findOneBy({ id: reservationId });
+        const reservation = await Booking.findOneBy({ id: reservationId });
         if (!reservation) {
             return res.status(404).json({ success: false, message: "No reservation found with the provided ID" });
         }
@@ -94,7 +94,7 @@ export const checkOut = async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, message: "Invalid reservation ID format." });
         }
 
-        const reservation = await Access.findOneBy({ id: reservationId });
+        const reservation = await Booking.findOneBy({ id: reservationId });
         if (!reservation) {
             return res.status(404).json({ success: false, message: "No reservation found with this ID." });
         }
@@ -108,7 +108,7 @@ export const checkOut = async (req: Request, res: Response) => {
         }
 
         // Move to Access_History
-        const history = new Access_History();
+        const history = new Booking_History();
         history.room_id = reservation.room_id;
         history.user_id = reservation.user_id;
         history.entry_datetime = reservation.entry_datetime;
@@ -117,7 +117,7 @@ export const checkOut = async (req: Request, res: Response) => {
         await history.save();
 
         // Optionally delete the access record or mark it as checked-out
-        await Access.delete({ id: reservationId });
+        await Booking.delete({ id: reservationId });
 
         res.json({
             success: true,
@@ -161,7 +161,7 @@ export const newReservation = async (req: Request, res: Response) => {
         }
 
         // Create new reservation
-        const reservation = await Access.create({
+        const reservation = await Booking.create({
             room_id,
             user_id,
             entry_datetime: entryDate,
@@ -192,7 +192,7 @@ export const cancelReserve = async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, message: "Invalid reservation ID format" });
         }
 
-        const reservation = await Access.findOneBy({ id: reservationId });
+        const reservation = await Booking.findOneBy({ id: reservationId });
         if (!reservation) {
             return res.status(404).json({
                 success: false,
@@ -200,7 +200,7 @@ export const cancelReserve = async (req: Request, res: Response) => {
             });
         }
 
-        await Access.delete({ id: reservationId });
+        await Booking.delete({ id: reservationId });
 
         res.status(200).json({
             success: true,

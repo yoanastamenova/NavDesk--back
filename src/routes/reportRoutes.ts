@@ -1,7 +1,7 @@
 import express from "express";
 import { auth } from "../middlewares/auth";
 import { isAdmin } from "../middlewares/admin";
-import { deleteReport, getDailyReport, getDateReport, getRoomReport } from "../controllers/administration.controller";
+import { deleteReport, getDailyReport, getDateReport, getRoomReport } from "../controllers/report.controller";
 
 const router = express.Router();
 

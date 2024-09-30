@@ -2,8 +2,8 @@ import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColu
 import { User } from "./User"
 import { Room } from "./Room"
 
-@Entity("access")
-export class Access extends BaseEntity{
+@Entity("booking")
+export class Booking extends BaseEntity{
     @PrimaryGeneratedColumn()
     id!: number
 
@@ -13,10 +13,10 @@ export class Access extends BaseEntity{
     @Column({ name: 'room_id'})
     room_id!: number
 
-    @Column({ name: 'entry_datetime'})
+    @Column({ name: 'start_time'})
     entry_datetime!: Date
 
-    @Column({ name: 'exit_datetime'})
+    @Column({ name: 'end_time'})
     exit_datetime!: Date
 
     @Column({
@@ -27,6 +27,9 @@ export class Access extends BaseEntity{
     })
     state!: "reserved" | "checked-in" | "checked-out" | "cancelled";
 
+    @Column({ name: 'current_occupants'})
+    current_occupants!: number
+    
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
     user!: User;

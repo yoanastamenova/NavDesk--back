@@ -1,5 +1,5 @@
 import express from "express";
-import { getHistories, getRoomHistory } from "../controllers/accessHistory.controller";
+import { getHistories, getRoomHistory } from "../controllers/history.controller";
 import { isAdmin } from "../middlewares/admin";
 import { auth } from "../middlewares/auth";
 

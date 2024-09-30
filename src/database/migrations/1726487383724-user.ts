@@ -15,13 +15,7 @@ export class User1726487383724 implements MigrationInterface {
                         generationStrategy: "increment"
                     },
                     {
-                        name: "first_name",
-                        type: "varchar",
-                        length: "100",
-                        isNullable: true
-                    },
-                    {
-                        name: "last_name",
+                        name: "username",
                         type: "varchar",
                         length: "100",
                         isNullable: true

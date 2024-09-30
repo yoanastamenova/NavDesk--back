@@ -29,6 +29,11 @@ export class Room1726487414509 implements MigrationInterface {
                         name: "room_type",
                         type: "enum",
                         enum: ["event", "meetup", "workshop", "office"]
+                    },
+                    {
+                        name: "actual_state",
+                        type: "enum",
+                        enum: ["Available", "Occupied", "Non-bookable"]
                     }
                 ]
             }),

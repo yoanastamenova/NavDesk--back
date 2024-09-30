@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { User } from "../database/models/User";
-import bcrypt from "bcrypt";
-import { Access } from "../database/models/Access";
+import { Booking } from "../database/models/Booking";
 import { IsNull } from "typeorm";
-import { Access_History } from "../database/models/Access_history";
+import { Booking_History } from "../database/models/Booking_history";
 
 //GET ALL
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -11,8 +10,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
         const users = await User.find(
             {
                 select: {
-                    first_name: true,
-                    last_name: true,
+                    username: true,
                     email: true,
                     startup: true
                 }
@@ -43,8 +41,7 @@ export const getUserById = async (req: Request, res: Response) => {
         const user = await User.findOne(
             {
                 select: {
-                    first_name: true,
-                    last_name: true,
+                    username: true,
                     email: true
                 },
                 where: {
@@ -73,7 +70,7 @@ export const getUserCurrentAccess = async (req: Request, res: Response) => {
     const userId = parseInt(req.params.id);
 
     try {
-        const currentAccess = await Access.findOne({
+        const currentAccess = await Booking.findOne({
             where: {
                 user_id: userId,
                 exit_datetime: IsNull()
@@ -107,7 +104,7 @@ export const getUserAccessHistory = async (req: Request, res: Response) => {
     const userId = parseInt(req.params.id);
 
     try {
-        const accessHistory = await Access_History.find({
+        const accessHistory = await Booking_History.find({
             where: {
                 user_id: userId
             },
@@ -148,8 +145,7 @@ export const modifyUser = async (req: Request, res: Response) => {
               id: userId
             },
             {
-              first_name: req.body.first_name,
-              last_name: req.body.last_name,
+              username: req.body.username,
               email: req.body.email,
               startup: req.body.startup,
               dni: req.body.dni,

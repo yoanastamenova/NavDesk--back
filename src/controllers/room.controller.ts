@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Room } from "../database/models/Room";
-import { Access } from "../database/models/Access";
+import { Booking } from "../database/models/Booking";
 import { IsNull } from "typeorm";
 
 // GET ALL ROOMS
@@ -136,19 +136,18 @@ export const getRoomCurrentStatus = async (req: Request, res: Response) => {
             });
         }
 
-        const currentAccesses = await Access.find({
+        const currentAccesses = await Booking.find({
             where: {
                 room_id: roomId,
-                exit_datetime: IsNull() // Only include accesses that are currently ongoing
+                exit_datetime: IsNull()
             },
-            relations: ['user'] // Include user data for each access
+            relations: ['user']
         });
 
         // Map to only obtain necessary user information
         const usersCheckedIn = currentAccesses.map(access => ({
             user_id: access.user.id,
-            first_name: access.user.first_name,
-            last_name: access.user.last_name,
+            username: access.user.username,
             email: access.user.email,
             check_in_time: access.entry_datetime
         }));

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Access_History } from "../database/models/Access_history";
+import { Booking_History } from "../database/models/Booking_history";
 import { MoreThanOrEqual, LessThanOrEqual } from "typeorm";
 
 export const getHistories = async (req: Request, res: Response) => {
@@ -10,7 +10,7 @@ export const getHistories = async (req: Request, res: Response) => {
         const startDate = new Date(start_date as string);
         const endDate = new Date(end_date as string);
 
-        const period = await Access_History.find({
+        const period = await Booking_History.find({
             select: ['room_id', 'user_id', 'entry_datetime', 'exit_datetime'],
             where: {
                 entry_datetime: MoreThanOrEqual(startDate),
@@ -47,7 +47,7 @@ export const getRoomHistory = async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, message: "Invalid room ID format" });
         }
 
-        const room = await Access_History.find({
+        const room = await Booking_History.find({
             where: { room_id: roomId }
         });
 

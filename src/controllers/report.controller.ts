@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { MoreThanOrEqual, LessThan, Between } from "typeorm";
-import { Access } from "../database/models/Access";
-import { Administration } from "../database/models/Administration";
-import { Access_History } from "../database/models/Access_history";
+import { Booking } from "../database/models/Booking";
+import { Booking_History } from "../database/models/Booking_history";
+import { Report } from "../database/models/Report";
 
 // OBTAIN A DAILY REPORT
 export const getDailyReport = async (req: Request, res: Response) => {
@@ -12,7 +12,7 @@ export const getDailyReport = async (req: Request, res: Response) => {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     try {
-        const accessesToday = await Access.find({
+        const accessesToday = await Booking.find({
             where: {
                 entry_datetime: MoreThanOrEqual(today),
                 exit_datetime: LessThan(tomorrow)
@@ -20,9 +20,9 @@ export const getDailyReport = async (req: Request, res: Response) => {
         });
 
         // Define userEntries with a specific type
-        let userEntries: { [key: number]: number } = {}; // Change to number if user_id is a number
-        accessesToday.forEach(access => {
-            userEntries[access.user_id] = (userEntries[access.user_id] || 0) + 1;
+        let userEntries: { [key: number]: number } = {}; 
+        accessesToday.forEach(booking => {
+            userEntries[booking.user_id] = (userEntries[booking.user_id] || 0) + 1;
         });
 
         // Determine frequent and infrequent users based on the entries
@@ -38,7 +38,7 @@ export const getDailyReport = async (req: Request, res: Response) => {
         const totalAbsences = accessesToday.filter(acc => acc.state === 'cancelled').length; // Change 'no-show' to 'cancelled'
 
         const totalEntries = accessesToday.length; // Add this line to define totalEntries
-        const newReport = new Administration();
+        const newReport = new Report();
         newReport.report_date = today;
         newReport.total_entries = totalEntries;
         newReport.total_absences = totalAbsences;
@@ -78,7 +78,7 @@ export const getDateReport = async (req: Request, res: Response) => {
     endDate.setHours(23, 59, 59, 999);
 
     try {
-        const accesses = await Access_History.find({
+        const accesses = await Booking_History.find({
             where: {
                 entry_datetime: Between(startDate, endDate)
             }
@@ -108,7 +108,7 @@ export const getDateReport = async (req: Request, res: Response) => {
         const totalAbsences = accesses.filter(acc => acc.access_state === 'no-show').length;
 
         // Use Administration or a new model if administration should not be mixed with access history
-        const newReport = new Administration(); // or new AccessHistoryReport(); if a separate model
+        const newReport = new Report(); // or new AccessHistoryReport(); if a separate model
         newReport.report_date = new Date();
         newReport.total_entries = totalEntries;
         newReport.total_absences = totalAbsences;
@@ -140,7 +140,7 @@ export const getRoomReport = async (req: Request, res: Response) => {
     }
   
     try {
-        const accesses = await Access.find({
+        const accesses = await Booking.find({
             where: { room_id: roomId },
             order: { entry_datetime: "ASC" }
         });
@@ -177,7 +177,7 @@ export const deleteReport = async (req: Request, res: Response) => {
     }
 
     try {
-        const report = await Administration.findOneBy({ id: reportId });
+        const report = await Report.findOneBy({ id: reportId });
 
         if (!report) {
             return res.status(404).json({
@@ -187,7 +187,7 @@ export const deleteReport = async (req: Request, res: Response) => {
         }
 
         // Delete the report
-        await Administration.delete({ id: reportId });
+        await Report.delete({ id: reportId });
 
         res.status(200).json({
             success: true,

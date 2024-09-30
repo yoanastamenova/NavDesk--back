@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class Access1726487424393 implements MigrationInterface {
+export class BookingHistory1726487434146 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
-                name: "access",
+                name: "booking_history",
                 columns: [
                     {
                         name: "id",
@@ -25,17 +25,17 @@ export class Access1726487424393 implements MigrationInterface {
                         isNullable: false
                     },
                     {
-                        name: "entry_datetime",
+                        name: "start_time",
                         type: "datetime"
                     },
                     {
-                        name: "exit_datetime",
+                        name: "end_time",
                         type: "datetime"
                     },
                     {
                         name: "state",
                         type: "enum",
-                        enum: ["reserved", "checked-in", "checked-out", "cancelled"]
+                        enum: ["reserved", "no-show", "completed", "cancelled"]
                     }
                 ],
                 foreignKeys: [
@@ -55,8 +55,8 @@ export class Access1726487424393 implements MigrationInterface {
             }),
             true
         );
+    }        
+        public async down(queryRunner: QueryRunner): Promise<void> {
+            await queryRunner.dropTable('booking_history')
+        }
     }
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable('access')
-    }
-}
