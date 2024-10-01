@@ -66,7 +66,7 @@ Used technologies for the project:
 
 <img src="./img/Reverse_schema.png">
 
-- The database schema includes entities like `User`, `Room`, `Access`, `AccessHistory`, and `Administration`. These tables are interconnected to provide a comprehensive system for managing access controls dynamically. The relationships between them provide a faster and more capable way of updating the data in real time environment. It is designed in SQL together with TypeORM.
+- The database schema includes entities like `User`, `Room`, `Booking`, `Booking_History`, and `Report`. These tables are interconnected to provide a comprehensive system for managing access controls dynamically. The relationships between them provide a faster and more capable way of updating the data in real time environment. It is designed in SQL together with TypeORM.
 
 ## Local installation option ⚙️
 - Before starting it is important to have SQL and MySQLWorkbench installed locally in order to work with the database. If you dont have it or simply prefer to use a Docker configuration please follow the steps bellow and then you can continue with the clone.
@@ -90,8 +90,8 @@ Used technologies for the project:
 
 | Method | URI       | Action         | Auth                | Body                                                                                   |
 |--------|-----------|----------------|---------------------|----------------------------------------------------------------------------------------|
-| POST   | auth/register  | Register user  | N/A (public)        | `{  "email": "userEmail", "password": "userPassword" }` |
-| POST   | auth/login     | Login user     | N/A (public)        | `{ "email": "userEmail", "password": "userPassword" }`                                |
+| POST   | /auth/register  | Register user  | N/A (public)        | `{  "email": "userEmail", "password": "userPassword" }` |
+| POST   | /auth/login     | Login user     | N/A (public)        | `{ "email": "userEmail", "password": "userPassword" }`                                |
 
 ### 👤 Users
 
