@@ -12,7 +12,7 @@ import { auth } from "../middlewares/auth";
 
 const router = express.Router();
 
-router.get('/all', auth ,getAllRooms);
+router.get('/all',getAllRooms);
 router.get('/:id', auth, getRoomById);
 router.get('/:id/current-state', auth, getRoomCurrentStatus);
 router.post('/create', auth, isAdmin, createRoom); 
