@@ -44,6 +44,40 @@ export const getCurrentAccess = async (req: Request, res: Response) => {
     }
 }
 
+// GET USER BOOKINGS
+export const getUserBookings = async (req: Request, res: Response) => {
+    const userId = req.tokenData.id;  
+
+    try {
+        const bookings = await Booking.find({
+            where: {
+                user_id: userId
+            },
+            select: ['id', 'room_id', 'entry_datetime', 'exit_datetime', 'state']
+        });
+
+        if (bookings.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No bookings found for this user."
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Bookings retrieved successfully!",
+            data: bookings
+        });
+    } catch (error) {
+        console.error("Error getting user bookings:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error retrieving user bookings",
+            error: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
+        });
+    }
+}
+
 // REGISTER AS CHECK-IN
 export const checkIn = async (req: Request, res: Response) => {
     try {
@@ -179,7 +213,7 @@ export const newReservation = async (req: Request, res: Response) => {
         res.status(500).json({
             success: false,
             message: "Error creating a new reservation!",
-            error: (error as Error).message  // Consider filtering error details in production
+            error: (error as Error).message  
         });
     }
 }
