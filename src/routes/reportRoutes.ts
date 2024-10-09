@@ -6,8 +6,8 @@ import { deleteReport, getDailyReport, getDateReport, getRoomReport } from "../c
 const router = express.Router();
 
 router.post('/daily', auth, isAdmin, getDailyReport)
-router.get('/room-usage/:id', auth, isAdmin, getRoomReport)
-router.get('/period', auth, isAdmin, getDateReport)
+router.post('/room-usage/:id', auth, isAdmin, getRoomReport)
+router.post('/period', auth, isAdmin, getDateReport)
 router.delete('/delete/:id', auth, isAdmin, deleteReport)
 
 export default router;

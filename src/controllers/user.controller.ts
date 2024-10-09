@@ -34,6 +34,70 @@ export const getAllUsers = async (req: Request, res: Response) => {
     }
 }
 
+// GET FULL USER PROFILE WITH DETAILS AND ACCESS INFO
+export const getUserFullProfile = async (req: Request, res: Response) => {
+    const userId = req.tokenData.id; 
+
+    try {
+        // Get basic user details
+        const userDetails = await User.findOne({
+            select: {
+                username: true,
+                email: true,
+                startup: true,
+                dni: true,
+                phone: true
+            },
+            where: { id: userId }
+        });
+
+        if (!userDetails) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found."
+            });
+        }
+
+        // Get current access
+        const currentAccess = await Booking.findOne({
+            where: {
+                user_id: userId,
+                exit_datetime: IsNull()
+            },
+            relations: ['room']
+        });
+
+        // Get access history
+        const accessHistory = await Booking_History.find({
+            where: {
+                user_id: userId
+            },
+            relations: ['room'],
+            order: {
+                entry_datetime: 'DESC'
+            }
+        });
+
+        // Send combined data
+        res.status(200).json({
+            success: true,
+            message: "Full user profile retrieved successfully.",
+            data: {
+                userDetails,
+                currentAccess: currentAccess || "No current access.",
+                accessHistory: accessHistory.length > 0 ? accessHistory : "No access history."
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error retrieving user profile.",
+            error: error
+        });
+    }
+}
+
 //GET A SPECIFIC USER
 export const getUserById = async (req: Request, res: Response) => {
     try {
@@ -138,38 +202,25 @@ export const getUserAccessHistory = async (req: Request, res: Response) => {
 //UPDATE USER
 export const modifyUser = async (req: Request, res: Response) => {
     try {
-        const userId = parseInt(req.params.id);
-
-        const user = await User.update(
-            {
-              id: userId
-            },
-            {
-              username: req.body.username,
-              email: req.body.email,
-              startup: req.body.startup,
-              dni: req.body.dni,
-              phone: req.body.phone
-            }
-          )
-      
-          res.json(
-            {
-              success: true,
-              message: "User info updated!",
-              data: user
-            }
-          )
-        } catch (error) {
-          res.status(500).json(
-            {
-              success: false,
-              message: "Error updating user",
-              error: error
-            }
-          )
-        }
-}
+        const userId = req.tokenData.id; 
+        
+        const { id, ...updateData } = req.body;
+        const user = await User.update({ id: userId }, updateData);
+        
+        res.json({
+            success: true,
+            message: "User info updated!",
+            data: user
+        });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error updating user",
+            error: (error as Error).message
+        });
+    }
+};
 
 //DELETE USER
 export const deleteUser = async (req:Request, res: Response) => {
