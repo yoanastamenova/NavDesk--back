@@ -3,41 +3,39 @@ import { MoreThanOrEqual, LessThan, Between } from "typeorm";
 import { Booking } from "../database/models/Booking";
 import { Booking_History } from "../database/models/Booking_history";
 import { Report } from "../database/models/Report";
+import moment from "moment-timezone";
+import { moveExpiredReservationsToHistory } from './scheduleController'; // adjust import path as necessary
+
 
 // OBTAIN A DAILY REPORT
 export const getDailyReport = async (req: Request, res: Response) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const today = moment.utc().startOf('day').toDate();
+    const tomorrow = moment(today).add(1, 'day').toDate();
 
     try {
         const accessesToday = await Booking.find({
             where: {
                 entry_datetime: MoreThanOrEqual(today),
                 exit_datetime: LessThan(tomorrow)
-            }
+            },
         });
 
-        // Define userEntries with a specific type
-        let userEntries: { [key: number]: number } = {}; 
+        let userEntries: { [key: number]: number } = {};
         accessesToday.forEach(booking => {
             userEntries[booking.user_id] = (userEntries[booking.user_id] || 0) + 1;
         });
 
-        // Determine frequent and infrequent users based on the entries
-        let frequentUsers: string[] = []; // Specify type as string[]
-        let infrequentUsers: string[] = []; // Specify type as string[]
+        let frequentUsers: number[] = [];
+        let infrequentUsers: number[] = [];
         Object.keys(userEntries).forEach(userId => {
-            const id = Number(userId); // Convert userId to number
-            if (userEntries[id] > 1) frequentUsers.push(id.toString());
-            else if (userEntries[id] <= 2) infrequentUsers.push(id.toString());
+            const id = Number(userId);
+            if (userEntries[id] > 1) frequentUsers.push(id);
+            else infrequentUsers.push(id);
         });
 
-        // Update the condition to match the correct state types
-        const totalAbsences = accessesToday.filter(acc => acc.state === 'cancelled').length; // Change 'no-show' to 'cancelled'
+        const totalEntries = accessesToday.length;
+        const totalAbsences = accessesToday.filter(acc => acc.state === 'cancelled').length;
 
-        const totalEntries = accessesToday.length; // Add this line to define totalEntries
         const newReport = new Report();
         newReport.report_date = today;
         newReport.total_entries = totalEntries;
@@ -51,12 +49,12 @@ export const getDailyReport = async (req: Request, res: Response) => {
             message: "Daily report for today created successfully.",
             data: newReport
         });
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error creating daily report:", error);
         res.status(500).json({
             success: false,
             message: "Error in creating the daily report.",
-            error: (error as Error).message
+            error: error.message
         });
     }
 };
@@ -138,17 +136,17 @@ export const getRoomReport = async (req: Request, res: Response) => {
     if (isNaN(roomId)) {
         return res.status(400).json({ success: false, message: "Invalid room ID format." });
     }
-  
+
     try {
-        const accesses = await Booking.find({
+        const accesses = await Booking_History.find({
             where: { room_id: roomId },
             order: { entry_datetime: "ASC" }
         });
-  
+
         if (accesses.length === 0) {
             return res.status(404).json({ success: false, message: "No access records found for this room." });
         }
-  
+
         res.json({
             success: true,
             message: "Access records for the room retrieved successfully.",
@@ -199,6 +197,23 @@ export const deleteReport = async (req: Request, res: Response) => {
         res.status(500).json({
             success: false,
             message: "Error deleting the report",
+            error: (error as Error).message
+        });
+    }
+};
+
+export const triggerMoveReservationsToHistory = async (req: Request, res: Response) => {
+    try {
+        await moveExpiredReservationsToHistory();
+        return res.status(200).json({
+            success: true,
+            message: 'Expired reservations moved to history successfully.'
+        });
+    } catch (error) {
+        console.error("Failed to move expired reservations to history:", error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to move reservations due to an internal error.',
             error: (error as Error).message
         });
     }

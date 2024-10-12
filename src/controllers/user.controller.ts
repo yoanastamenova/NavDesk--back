@@ -12,7 +12,8 @@ export const getAllUsers = async (req: Request, res: Response) => {
                 select: {
                     username: true,
                     email: true,
-                    startup: true
+                    startup: true,
+                    role: true
                 }
             }
         )

@@ -3,7 +3,7 @@ import { Booking } from '../database/models/Booking';
 import { Booking_History } from '../database/models/Booking_history';
 import { LessThanOrEqual, Not } from 'typeorm'; // Add this import
 
-const moveExpiredReservationsToHistory = async () => {
+export const moveExpiredReservationsToHistory = async () => {
     const currentDate = new Date();
 
     const expiredReservations = await Booking.find({
