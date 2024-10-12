@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { MoreThanOrEqual, LessThan, Between } from "typeorm";
+import { MoreThanOrEqual, LessThanOrEqual } from "typeorm";
 import { Booking } from "../database/models/Booking";
 import { Booking_History } from "../database/models/Booking_history";
 import { Report } from "../database/models/Report";
@@ -16,7 +16,7 @@ export const getDailyReport = async (req: Request, res: Response) => {
         const accessesToday = await Booking.find({
             where: {
                 entry_datetime: MoreThanOrEqual(today),
-                exit_datetime: LessThan(tomorrow)
+                exit_datetime: LessThanOrEqual(tomorrow)
             },
         });
 
@@ -61,24 +61,24 @@ export const getDailyReport = async (req: Request, res: Response) => {
 
 //OBTAIN DATETIME PERIOD REPORT
 export const getDateReport = async (req: Request, res: Response) => {
-    const { start_date, end_date } = req.body;
+    const { start_time, end_time } = req.body;
 
-    if (!start_date || !end_date) {
+    if (!start_time || !end_time) {
         return res.status(400).json({
             success: false,
             message: "Both start date and end date are required fields!"
         });
     }
 
-    const startDate = new Date(start_date);
-    startDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(end_date);
-    endDate.setHours(23, 59, 59, 999);
+    // Creating Date objects directly
+    const startDate = new Date(start_time);
+    const endDate = new Date(end_time);
 
     try {
         const accesses = await Booking_History.find({
             where: {
-                entry_datetime: Between(startDate, endDate)
+                entry_datetime: MoreThanOrEqual(startDate),
+                exit_datetime: LessThanOrEqual(endDate)
             }
         });
 
@@ -105,8 +105,7 @@ export const getDateReport = async (req: Request, res: Response) => {
         const totalEntries = accesses.length;
         const totalAbsences = accesses.filter(acc => acc.access_state === 'no-show').length;
 
-        // Use Administration or a new model if administration should not be mixed with access history
-        const newReport = new Report(); // or new AccessHistoryReport(); if a separate model
+        const newReport = new Report(); 
         newReport.report_date = new Date();
         newReport.total_entries = totalEntries;
         newReport.total_absences = totalAbsences;
@@ -125,11 +124,10 @@ export const getDateReport = async (req: Request, res: Response) => {
         res.status(500).json({
             success: false,
             message: "Error obtaining the date period report.",
-            error: (error as Error).message
+            error: error instanceof Error ? error.message : 'Unknown error'
         });
     }
 };
-
 // REPORT FOR SPECIFIC ROOM
 export const getRoomReport = async (req: Request, res: Response) => {
     const roomId = parseInt(req.params.id);
