@@ -3,20 +3,18 @@ import { MoreThanOrEqual, LessThanOrEqual } from "typeorm";
 import { Booking } from "../database/models/Booking";
 import { Booking_History } from "../database/models/Booking_history";
 import { Report } from "../database/models/Report";
-import moment from "moment-timezone";
+import moment from "moment";
 import { moveExpiredReservationsToHistory } from './scheduleController'; // adjust import path as necessary
 
 
 // OBTAIN A DAILY REPORT
 export const getDailyReport = async (req: Request, res: Response) => {
-    const today = moment.utc().startOf('day').toDate();
-    const tomorrow = moment(today).add(1, 'day').toDate();
+    const today = moment().startOf('day').toDate();
 
     try {
         const accessesToday = await Booking.find({
             where: {
-                entry_datetime: MoreThanOrEqual(today),
-                exit_datetime: LessThanOrEqual(tomorrow)
+                entry_datetime: MoreThanOrEqual(today)
             },
         });
 
@@ -28,9 +26,9 @@ export const getDailyReport = async (req: Request, res: Response) => {
         let frequentUsers: number[] = [];
         let infrequentUsers: number[] = [];
         Object.keys(userEntries).forEach(userId => {
-            const id = Number(userId);
-            if (userEntries[id] > 1) frequentUsers.push(id);
-            else infrequentUsers.push(id);
+            const numEntries = userEntries[Number(userId)];
+            if (numEntries > 1) frequentUsers.push(Number(userId));
+            else infrequentUsers.push(Number(userId));
         });
 
         const totalEntries = accessesToday.length;
@@ -49,12 +47,12 @@ export const getDailyReport = async (req: Request, res: Response) => {
             message: "Daily report for today created successfully.",
             data: newReport
         });
-    } catch (error: any) {
+    } catch (error) {
         console.error("Error creating daily report:", error);
         res.status(500).json({
             success: false,
             message: "Error in creating the daily report.",
-            error: error.message
+            error: error instanceof Error ? error.message : 'Unknown error'
         });
     }
 };
@@ -128,6 +126,7 @@ export const getDateReport = async (req: Request, res: Response) => {
         });
     }
 };
+
 // REPORT FOR SPECIFIC ROOM
 export const getRoomReport = async (req: Request, res: Response) => {
     const roomId = parseInt(req.params.id);
