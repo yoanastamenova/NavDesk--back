@@ -1,5 +1,5 @@
 import express from "express";
-import { cancelReserve, checkIn, checkOut, getCurrentAccess, getUserBookings, newReservation } from "../controllers/booking.controller";
+import { cancelReserve, checkIn, checkOut, getCurrentAccess, getUserBookings, newReservation, updateReservation } from "../controllers/booking.controller";
 import { auth } from "../middlewares/auth";
 
 const router = express.Router();
@@ -16,6 +16,9 @@ router.post('/check-out/:id', auth, checkOut);
 
 // For creating a new reservation
 router.post('/reserve', auth, newReservation);
+
+//Update a reservation
+router.put('/update/:id', auth, updateReservation);
 
 // Cancel a selected reservation by its ID
 router.delete('/cancel/:id', auth, cancelReserve);

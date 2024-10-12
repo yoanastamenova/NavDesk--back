@@ -78,7 +78,7 @@ export const getUserBookings = async (req: Request, res: Response) => {
     }
 }
 
-// REGISTER AS CHECK-IN
+// REGISTER CHECK-IN
 export const checkIn = async (req: Request, res: Response) => {
     try {
         const reservationId = parseInt(req.params.id);
@@ -245,6 +245,63 @@ export const cancelReserve = async (req: Request, res: Response) => {
         res.status(500).json({
             success: false,
             message: "Reservation can't be cancelled",
+            error: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
+        });
+    }
+}
+
+//MODIFY BOOKING
+
+export const updateReservation = async (req: Request, res: Response) => {
+    try {
+        const reservationId = parseInt(req.params.id);
+        if (isNaN(reservationId)) {
+            return res.status(400).json({ success: false, message: "Invalid reservation ID format" });
+        }
+
+        const { entry_datetime, exit_datetime } = req.body;
+        if (!entry_datetime || !exit_datetime) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Missing start or end datetime"
+            });
+        }
+
+        const reservation = await Booking.findOneBy({ id: reservationId });
+        if (!reservation) {
+            return res.status(404).json({
+                success: false,
+                message: "No reservation found with this ID"
+            });
+        }
+
+        if (["checked-in", "checked-out", "cancelled"].includes(reservation.state)) {
+            return res.status(400).json({
+                success: false,
+                message: "Cannot update a reservation that is already " + reservation.state
+            });
+        }
+
+        // Update reservation dates
+        reservation.entry_datetime = new Date(entry_datetime);
+        reservation.exit_datetime = new Date(exit_datetime);
+
+        await reservation.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Reservation updated successfully",
+            data: {
+                id: reservation.id,
+                entry_datetime: reservation.entry_datetime,
+                exit_datetime: reservation.exit_datetime
+            }
+        });
+    } catch (error) {
+        console.error("Error updating reservation:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error updating reservation",
             error: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined
         });
     }
