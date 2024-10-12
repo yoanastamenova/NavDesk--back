@@ -102,7 +102,7 @@ export const checkIn = async (req: Request, res: Response) => {
             });
         }
 
-        reservation.state = "checked-in";
+        reservation.state = "Checked-in";
         reservation.entry_datetime = new Date();  
 
         await reservation.save();
@@ -146,7 +146,7 @@ export const checkOut = async (req: Request, res: Response) => {
         history.user_id = reservation.user_id;
         history.entry_datetime = reservation.entry_datetime;
         history.exit_datetime = new Date();
-        history.access_state = "completed";
+        history.access_state = "Completed";
         await history.save();
 
         await Booking.delete({ id: reservationId });
@@ -194,7 +194,7 @@ export const newReservation = async (req: Request, res: Response) => {
             user_id,
             entry_datetime: entryDate,
             exit_datetime: exitDate,
-            state: "reserved" 
+            state: "Reserved" 
         }).save();
 
         res.status(201).json({
@@ -269,7 +269,7 @@ export const updateReservation = async (req: Request, res: Response) => {
             });
         }
 
-        if (["checked-in", "checked-out", "cancelled"].includes(reservation.state)) {
+        if (["Checked-in", "Checked-out", "Cancelled"].includes(reservation.state)) {
             return res.status(400).json({
                 success: false,
                 message: "Cannot update a reservation that is already " + reservation.state

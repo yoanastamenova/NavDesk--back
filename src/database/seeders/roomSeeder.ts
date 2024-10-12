@@ -8,35 +8,35 @@ export const roomSeeder = async () => {
         const room1 = new Room();
         room1.room_name = 'Madrid';
         room1.capacity = 150;
-        room1.room_type = "event";
+        room1.room_type = "Event";
         room1.actual_state = "Available";
         await room1.save();
 
         const room2 = new Room();
         room2.room_name = 'Barcelona';
         room2.capacity = 20;
-        room2.room_type = "meetup";
+        room2.room_type = "Meetup";
         room2.actual_state = "Available";
         await room2.save();
 
         const room3 = new Room();
         room3.room_name = 'Valencia';
         room3.capacity = 50;
-        room3.room_type = "workshop";
+        room3.room_type = "Workshop";
         room3.actual_state = "Non-bookable";
         await room3.save();
 
         const room4 = new Room();
         room4.room_name = 'Malaga';
         room4.capacity = 5;
-        room4.room_type = "office";
+        room4.room_type = "Office";
         room4.actual_state = "Occupied";
         await room4.save();
 
         const room5 = new Room();
         room5.room_name = 'Sevilla';
         room5.capacity = 30;
-        room5.room_type = "workshop";
+        room5.room_type = "Workshop";
         room5.actual_state = "Available";
         await room5.save();
 

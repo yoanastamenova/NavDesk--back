@@ -35,12 +35,7 @@ export class Booking1726487424393 implements MigrationInterface {
                     {
                         name: "state",
                         type: "enum",
-                        enum: ["reserved", "checked-in", "checked-out", "cancelled"]
-                    },
-                    {
-                        name: "current_occupants",
-                        type: "int",
-                        isNullable: true
+                        enum: ["Reserved", "Checked-in", "Checked-out", "Cancelled"]
                     }
                 ],
                 foreignKeys: [

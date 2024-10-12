@@ -16,16 +16,16 @@ export class Room extends BaseEntity {
     @Column({
         name: 'room_type',
         type: "enum",
-        enum: ["event", "meetup", "workshop", "office"],
-        default: "event"
+        enum: ["Event", "Meetup", "Workshop", "Office"],
+        default: "Event"
     })
-    room_type!: 'event' | 'meetup' | 'workshop' | 'office';
+    room_type!: 'Event' | 'Meetup' | 'Workshop' | 'Office';
 
     @Column({
         name: 'actual_state',
         type: "enum",
         enum: ["Available", "Occupied", "Non-bookable"],
-        default: "event"
+        default: "Event"
     })
     actual_state!: "Available" | "Occupied" | "Non-bookable";
 

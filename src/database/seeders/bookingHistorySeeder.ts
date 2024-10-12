@@ -10,7 +10,7 @@ export const bookingHistorySeeder = async () => {
         history1.room_id = 1;
         history1.entry_datetime = new Date("2023-01-01T09:00:00");
         history1.exit_datetime = new Date("2023-01-01T17:00:00");
-        history1.access_state = "completed";
+        history1.access_state = "Completed";
         await history1.save();
 
         const history2 = new Booking_History();
@@ -18,7 +18,7 @@ export const bookingHistorySeeder = async () => {
         history2.room_id = 2;
         history2.entry_datetime = new Date("2023-01-02T10:00:00");
         history2.exit_datetime = new Date("2023-01-02T12:00:00");
-        history2.access_state = "no-show";
+        history2.access_state = "No-show";
         await history2.save();
 
         const history3 = new Booking_History();
@@ -26,7 +26,7 @@ export const bookingHistorySeeder = async () => {
         history3.room_id = 3;
         history3.entry_datetime = new Date("2023-01-03T11:00:00");
         history3.exit_datetime = new Date("2023-01-03T14:00:00");
-        history3.access_state = "cancelled";
+        history3.access_state = "Cancelled";
         await history3.save();
 
         const history4 = new Booking_History();
@@ -34,7 +34,7 @@ export const bookingHistorySeeder = async () => {
         history4.room_id = 4;
         history4.entry_datetime = new Date("2023-01-04T08:00:00");
         history4.exit_datetime = new Date("2023-01-04T18:00:00");
-        history4.access_state = "reserved";
+        history4.access_state = "Completed";
         await history4.save();
 
         const history5 = new Booking_History();
@@ -42,7 +42,7 @@ export const bookingHistorySeeder = async () => {
         history5.room_id = 5;
         history5.entry_datetime = new Date("2023-01-05T13:00:00");
         history5.exit_datetime = new Date("2023-01-05T15:00:00");
-        history5.access_state = "completed";
+        history5.access_state = "Completed";
         await history5.save();
 
         console.log("===========================");

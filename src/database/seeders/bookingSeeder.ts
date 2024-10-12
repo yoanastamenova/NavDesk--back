@@ -10,8 +10,7 @@ export const bookingSeeder = async () => {
         booking1.room_id = 1; 
         booking1.entry_datetime = new Date("2023-01-01T09:00:00");
         booking1.exit_datetime = new Date("2023-01-01T17:00:00");
-        booking1.state = "reserved";
-        booking1.current_occupants = 0;
+        booking1.state = "Reserved";
         await booking1.save();
 
         const booking2 = new Booking();
@@ -19,8 +18,7 @@ export const bookingSeeder = async () => {
         booking2.room_id = 2;
         booking2.entry_datetime = new Date("2023-01-02T10:00:00");
         booking2.exit_datetime = new Date("2023-01-02T12:00:00");
-        booking2.state = "cancelled";
-        booking2.current_occupants = 0;
+        booking2.state = "Cancelled";
         await booking2.save();
 
         const booking3 = new Booking();
@@ -28,8 +26,7 @@ export const bookingSeeder = async () => {
         booking3.room_id = 3;
         booking3.entry_datetime = new Date("2023-01-03T11:00:00");
         booking3.exit_datetime = new Date("2023-01-03T14:00:00");
-        booking3.state = "checked-in";
-        booking3.current_occupants = 3;
+        booking3.state = "Reserved";
         await booking3.save();
 
         const booking4 = new Booking();
@@ -37,8 +34,7 @@ export const bookingSeeder = async () => {
         booking4.room_id = 4;
         booking4.entry_datetime = new Date("2023-01-04T08:00:00");
         booking4.exit_datetime = new Date("2023-01-04T18:00:00");
-        booking4.state = "checked-out";
-        booking4.current_occupants = 0;
+        booking4.state = "Checked-out";
         await booking4.save();
 
         const booking5 = new Booking();
@@ -46,8 +42,7 @@ export const bookingSeeder = async () => {
         booking5.room_id = 5;
         booking5.entry_datetime = new Date("2023-01-05T13:00:00");
         booking5.exit_datetime = new Date("2023-01-05T15:00:00");
-        booking5.state = "reserved";
-        booking5.current_occupants = 0;
+        booking5.state = "Cancelled";
         await booking5.save();
 
         console.log("===========================");

@@ -21,14 +21,14 @@ export class Room1726487414509 implements MigrationInterface {
                         isNullable: false
                     },
                     {
-                        name: "capacity",
+                        name: "Capacity",
                         type: "int",
                         isNullable: false
                     },
                     {
                         name: "room_type",
                         type: "enum",
-                        enum: ["event", "meetup", "workshop", "office"]
+                        enum: ["Event", "Meetup", "Workshop", "Office"]
                     },
                     {
                         name: "actual_state",

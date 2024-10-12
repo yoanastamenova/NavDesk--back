@@ -21,14 +21,11 @@ export class Booking extends BaseEntity{
 
     @Column({
         type: "enum",
-        enum: ["reserved", "checked-in", "checked-out", "cancelled"],
+        enum: ["Reserved", "Checked-in", "Checked-out", "Cancelled"],
         default: "pending",
         name: 'state'
     })
-    state!: "reserved" | "checked-in" | "checked-out" | "cancelled";
-
-    @Column({ name: 'current_occupants'})
-    current_occupants!: number
+    state!: "Reserved" | "Checked-in" | "Checked-out" | "Cancelled";
     
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })

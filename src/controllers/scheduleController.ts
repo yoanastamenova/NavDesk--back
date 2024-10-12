@@ -9,7 +9,7 @@ export const moveExpiredReservationsToHistory = async () => {
     const expiredReservations = await Booking.find({
         where: {
             exit_datetime: LessThanOrEqual(currentDate),
-            state: Not("checked-out" as "reserved" | "checked-in" | "checked-out" | "cancelled")
+            state: Not("Checked-out" as "Reserved" | "Checked-in" | "Checked-out" | "Cancelled")
         }
     });
 

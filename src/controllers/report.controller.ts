@@ -32,7 +32,7 @@ export const getDailyReport = async (req: Request, res: Response) => {
         });
 
         const totalEntries = accessesToday.length;
-        const totalAbsences = accessesToday.filter(acc => acc.state === 'cancelled').length;
+        const totalAbsences = accessesToday.filter(acc => acc.state === 'Cancelled').length;
 
         const newReport = new Report();
         newReport.report_date = today;
@@ -101,7 +101,7 @@ export const getDateReport = async (req: Request, res: Response) => {
         });
 
         const totalEntries = accesses.length;
-        const totalAbsences = accesses.filter(acc => acc.access_state === 'no-show').length;
+        const totalAbsences = accesses.filter(acc => acc.access_state === 'No-show').length;
 
         const newReport = new Report(); 
         newReport.report_date = new Date();

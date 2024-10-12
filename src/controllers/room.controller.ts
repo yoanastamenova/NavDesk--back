@@ -147,7 +147,7 @@ export const getRoomCurrentStatus = async (req: Request, res: Response) => {
         const users = await Booking.find({
             where: {
                 room_id: roomId,
-                state: "checked-in"
+                state: "Checked-in"
             },
             relations: ['user']
         });

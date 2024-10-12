@@ -21,10 +21,10 @@ export class Booking_History extends BaseEntity {
 
     @Column({
         type: "enum",
-        enum: ["reserved", "no-show", "completed", "cancelled"],
+        enum: ["No-show", "Completed", "Cancelled"],
         name: 'state'
     })
-    access_state!: "reserved" | "no-show" | "completed" | "cancelled";
+    access_state!: "No-show" | "Completed" | "Cancelled";
 
     @ManyToOne(() => User, user => user.bookingHistory)
     @JoinColumn({ name: 'user_id' })

@@ -35,7 +35,7 @@ export class BookingHistory1726487434146 implements MigrationInterface {
                     {
                         name: "state",
                         type: "enum",
-                        enum: ["reserved", "no-show", "completed", "cancelled"]
+                        enum: ["No-show", "Completed", "Cancelled"]
                     }
                 ],
                 foreignKeys: [
