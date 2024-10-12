@@ -40,7 +40,6 @@ export const getUserFullProfile = async (req: Request, res: Response) => {
     const userId = req.tokenData.id; 
 
     try {
-        // Get basic user details
         const userDetails = await User.findOne({
             select: {
                 username: true,
@@ -59,7 +58,6 @@ export const getUserFullProfile = async (req: Request, res: Response) => {
             });
         }
 
-        // Get current access
         const currentAccess = await Booking.findOne({
             where: {
                 user_id: userId,
@@ -68,7 +66,6 @@ export const getUserFullProfile = async (req: Request, res: Response) => {
             relations: ['room']
         });
 
-        // Get access history
         const accessHistory = await Booking_History.find({
             where: {
                 user_id: userId
@@ -79,7 +76,6 @@ export const getUserFullProfile = async (req: Request, res: Response) => {
             }
         });
 
-        // Send combined data
         res.status(200).json({
             success: true,
             message: "Full user profile retrieved successfully.",

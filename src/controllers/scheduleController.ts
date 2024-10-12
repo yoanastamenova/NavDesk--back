@@ -9,11 +9,11 @@ export const moveExpiredReservationsToHistory = async () => {
     const expiredReservations = await Booking.find({
         where: {
             exit_datetime: LessThanOrEqual(currentDate),
-            state: Not("checked-out" as "reserved" | "checked-in" | "checked-out" | "cancelled") // Specify the type
+            state: Not("checked-out" as "reserved" | "checked-in" | "checked-out" | "cancelled")
         }
     });
 
-    const validStates = ["reserved", "cancelled", "no-show", "completed"]; // Define valid states
+    const validStates = ["reserved", "cancelled", "no-show", "completed"];
 
     const historyPromises = expiredReservations.map(reservation => {
         const history = new Booking_History();
@@ -27,7 +27,6 @@ export const moveExpiredReservationsToHistory = async () => {
     // Save all histories
     await Promise.all(historyPromises);
 
-    // Optionally, delete expired reservations from the Access table
     const deletePromises = expiredReservations.map(reservation => {
         return Booking.delete({ id: reservation.id });
     });

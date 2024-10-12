@@ -9,6 +9,7 @@ router.post('/daily', auth, isAdmin, getDailyReport)
 router.post('/room-usage/:id', auth, isAdmin, getRoomReport)
 router.post('/period', auth, isAdmin, getDateReport)
 router.delete('/delete/:id', auth, isAdmin, deleteReport)
-// Add new route for triggering history move
+
+// Route used to manually triggering history move
 router.post('/trigger', auth, isAdmin, triggerMoveReservationsToHistory);
 export default router;

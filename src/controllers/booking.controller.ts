@@ -133,7 +133,6 @@ export const checkOut = async (req: Request, res: Response) => {
             return res.status(404).json({ success: false, message: "No reservation found with this ID." });
         }
 
-        // Ensuring that the user is checking out after the entry datetime
         if (new Date() < new Date(reservation.entry_datetime)) {
             return res.status(400).json({
                 success: false,
@@ -150,7 +149,6 @@ export const checkOut = async (req: Request, res: Response) => {
         history.access_state = "completed";
         await history.save();
 
-        // Optionally delete the access record or mark it as checked-out
         await Booking.delete({ id: reservationId });
 
         res.json({
@@ -174,7 +172,6 @@ export const newReservation = async (req: Request, res: Response) => {
         const { room_id, entry_datetime, exit_datetime } = req.body;
         const user_id = req.tokenData.id;
 
-        // Validate presence of all required fields
         if (!room_id || !entry_datetime || !exit_datetime) {
             return res.status(400).json({
                 success: false,
@@ -182,11 +179,9 @@ export const newReservation = async (req: Request, res: Response) => {
             });
         }
 
-        // Create date objects
         const entryDate = new Date(entry_datetime);
         const exitDate = new Date(exit_datetime);
 
-        // Time validation: exit time must be after entry time
         if (exitDate <= entryDate) {
             return res.status(400).json({
                 success: false,
@@ -194,13 +189,12 @@ export const newReservation = async (req: Request, res: Response) => {
             });
         }
 
-        // Create new reservation
         const reservation = await Booking.create({
             room_id,
             user_id,
             entry_datetime: entryDate,
             exit_datetime: exitDate,
-            state: "reserved"  // Assuming "reserved" is initial state
+            state: "reserved" 
         }).save();
 
         res.status(201).json({

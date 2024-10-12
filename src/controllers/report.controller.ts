@@ -4,7 +4,7 @@ import { Booking } from "../database/models/Booking";
 import { Booking_History } from "../database/models/Booking_history";
 import { Report } from "../database/models/Report";
 import moment from "moment";
-import { moveExpiredReservationsToHistory } from './scheduleController'; // adjust import path as necessary
+import { moveExpiredReservationsToHistory } from './scheduleController';
 
 
 // OBTAIN A DAILY REPORT
