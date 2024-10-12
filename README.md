@@ -2,7 +2,7 @@
 
 Welcome to the backend part of NavDesk. This is a Co-Working App project utilizing state-of-the-art technologies to manage access and administration within "Las Naves" facility in Valencia!
 
-<img src="./img/logo.webp" width="600" height="600" align="center">
+<img src="./img/icon.png" width="600" height="600" align="center">
 <br>
 
 ##  <summary> Table of contents 📝</summary>
