@@ -125,48 +125,55 @@ export const deleteRoom = async (req: Request, res: Response) => {
 
 //GET STATE
 export const getRoomCurrentStatus = async (req: Request, res: Response) => {
-    const roomId = parseInt(req.params.id);
-
     try {
-        const room = await Room.findOneBy({ id: roomId });
-        if (!room) {
-            return res.status(404).json({
+        const { id } = req.params;
+        const roomId = parseInt(id, 10);
+
+        if (isNaN(roomId)) {
+            return res.status(400).json({
                 success: false,
-                message: "Room not found."
+                message: 'Invalid room ID',
             });
         }
 
-        const currentAccesses = await Booking.find({
+        const room = await Room.findOneBy({ id: roomId });
+        if (!room) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Room not found." 
+            });
+        }
+
+        const users = await Booking.find({
             where: {
                 room_id: roomId,
-                exit_datetime: IsNull()
+                state: "checked-in"
             },
             relations: ['user']
         });
 
-        // Map to only obtain necessary user information
-        const usersCheckedIn = currentAccesses.map(access => ({
-            user_id: access.user.id,
-            username: access.user.username,
-            email: access.user.email,
-            check_in_time: access.entry_datetime
-        }));
-
-        res.json({
+        return res.status(200).json({
             success: true,
-            message: "Current status of the room retrieved successfully.",
-            room: {
-                room_id: room.id,
-                room_name: room.room_name,
-                capacity: room.capacity,
-                room_type: room.room_type
+            message: 'Room state retrieved successfully',
+            data: {
+                room: {
+                    room_id: room.id,
+                    room_name: room.room_name,
+                    capacity: room.capacity,
+                    room_type: room.room_type
+                },
+                users: users.map(booking => ({
+                    id: booking.user.id,
+                    email: booking.user.email,
+                    username: booking.user.username
+                }))
             },
-            users: usersCheckedIn
         });
     } catch (error) {
+        console.error("Error retrieving room status:", error);
         res.status(500).json({
             success: false,
-            message: "Error retrieving current status of the room.",
+            message: "Error recieving room state.",
             error: error
         });
     }
