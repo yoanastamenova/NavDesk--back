@@ -6,7 +6,6 @@ export const getHistories = async (req: Request, res: Response) => {
     try {
         const { start_date, end_date } = req.body;
 
-        // Convert query parameters to Date objects
         const startDate = new Date(start_date as string);
         const endDate = new Date(end_date as string);
 
